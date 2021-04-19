@@ -19,17 +19,20 @@ namespace PizzaSimulator
         protected override void Initialize()
         {
             ScreenManager.Instance.Initialize();
-
+            this.Window.AllowUserResizing = true;
             base.Initialize();
+            ScreenManager.Instance.Graphics.PreferredBackBufferWidth = 1280;
+            ScreenManager.Instance.Graphics.PreferredBackBufferHeight = 720;
+            ScreenManager.Instance.Graphics.ApplyChanges();
         }
 
         protected override void LoadContent()
         {
             ScreenManager.Instance.Load();
 
-            Customer.SpawnCustomer(new Vector2(150, 150));
-
             base.LoadContent();
+
+            Loader.DefaultFont = Content.Load<SpriteFont>("Fonts/DefaultFont");
 
         }
 
@@ -41,8 +44,6 @@ namespace PizzaSimulator
             EntityManager.Instance.SetDeltaTime(gameTime);
 
             EntityManager.Instance.Update();
-
-            //CameraManager.Camera.Follow(EntityManager.Instance.Entities[0]);
 
             CameraManager.Camera.SetPosition(new Vector2(100, 100));
 
@@ -58,14 +59,20 @@ namespace PizzaSimulator
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Turquoise);
 
             SpriteBatch sb = ScreenManager.Instance.SpriteBatch;
             // Entity draw
-            sb.Begin(samplerState: SamplerState.PointClamp, transformMatrix: CameraManager.Camera.Transform);
+            sb.Begin(sortMode: SpriteSortMode.FrontToBack, samplerState: SamplerState.PointClamp, transformMatrix: CameraManager.Camera.Transform);
 
             foreach(Entity e in EntityManager.Instance.Entities)
                 e.Draw(sb);
+
+            sb.End();
+
+            sb.Begin();
+
+            EntityManager.Instance.DrawInfo(sb);
 
             sb.End();
 

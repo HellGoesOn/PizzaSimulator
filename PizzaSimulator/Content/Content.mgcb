@@ -13,3 +13,8 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Fonts/DefaultFont.spritefont
+/importer:
+/processor:
+/build:Fonts/DefaultFont.spritefont
+

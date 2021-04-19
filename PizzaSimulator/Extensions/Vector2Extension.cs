@@ -12,5 +12,16 @@ namespace PizzaSimulator.Extensions
             v.Normalize();
             return v;
         }
+
+        public static Vector2 RotatedBy(this Vector2 v, float radians, Vector2 center = default)
+        {
+            float cos = (float)Math.Cos(radians);
+            float sin = (float)Math.Sin(radians);
+            Vector2 vector = v - center;
+            Vector2 result = center;
+            result.X += vector.X * cos - vector.Y * sin;
+            result.Y += vector.X * sin + vector.Y * cos;
+            return result;
+        }
     }
 }

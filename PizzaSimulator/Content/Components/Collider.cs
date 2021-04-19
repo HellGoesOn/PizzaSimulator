@@ -20,7 +20,9 @@ namespace PizzaSimulator.Content.Components
 
         public Vector2 Position { get; set; }
 
-        public Rectangle Hitbox(Vector2 pos) => new Rectangle((int)pos.X, (int)pos.Y, Width, Height);
+        public Rectangle Hitbox => GetHibox(Position); 
+
+        public Rectangle GetHibox(Vector2 pos) => new Rectangle((int)pos.X, (int)pos.Y, Width, Height);
 
         public Vector2 Center
         {

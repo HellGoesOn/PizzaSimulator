@@ -21,5 +21,7 @@ namespace PizzaSimulator
 
             throw new Exception("Texture load attempt failed");
         }
+
+        public static SpriteFont DefaultFont { get; set; }
     }
 }

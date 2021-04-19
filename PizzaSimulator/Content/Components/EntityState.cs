@@ -1,12 +1,15 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace PizzaSimulator.Content.Components
 {
     public class EntityState
     {
+        public event EntityStateEventHandler OnStateBegin;
+
+        public event EntityStateEventHandler OnStateUpdate;
+
+        public event EntityStateEventHandler OnStateEnd;
+
         protected EntityState()
         {
             AssignedAnimations = new List<SpriteAnimation>();
@@ -24,12 +27,9 @@ namespace PizzaSimulator.Content.Components
                 AssignedAnimations.Add(animation);
         }
 
-        public event EntityStateEventHandler OnStateBegin;
-        public event EntityStateEventHandler OnStateUpdate;
-        public event EntityStateEventHandler OnStateEnd;
-
         public void BeginState()
         {
+            HasEnded = false;
             OnStateBegin?.Invoke(this);
         }
 
@@ -40,12 +40,20 @@ namespace PizzaSimulator.Content.Components
 
             if(!CurrentAnimation.Active)
             {
-                OnStateEnd?.Invoke(this);
-
-                foreach (SpriteAnimation a in AssignedAnimations)
-                    a.Reset();
+                EndState();
             }
         }
+
+        public void EndState()
+        {
+            HasEnded = true;
+            OnStateEnd?.Invoke(this);
+
+            foreach (SpriteAnimation a in AssignedAnimations)
+                a.Reset();
+        }
+
+        public bool HasEnded { get; set; }
 
         public SpriteAnimation CurrentAnimation => AssignedAnimations[SelectedAnimation];
 

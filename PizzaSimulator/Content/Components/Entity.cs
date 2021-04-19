@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PizzaSimulator.Content.Components.Interfaces;
+using PizzaSimulator.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace PizzaSimulator.Content.Components
 {
@@ -18,7 +18,7 @@ namespace PizzaSimulator.Content.Components
             SetState(defaultState);
         }
 
-        public abstract void AddStates();
+        protected abstract void AddStates();
 
         protected abstract void UpdateSelf();
 
@@ -27,8 +27,8 @@ namespace PizzaSimulator.Content.Components
             if (!Active)
                 return;
 
-            if(Collider != null)
-                Collider.Position = Position;
+            if(MyCollider != null)
+                MyCollider.Position = Position;
 
             UpdateSelf();
         }
@@ -51,17 +51,29 @@ namespace PizzaSimulator.Content.Components
             Vector2         drawOrigin    = animation.DrawOrigin;
             float           scale         = 1f;
             SpriteEffects   spriteEffects = animation.SpriteFX;
+            float           depth         = Math.Clamp(MyCollider.Center.Y / 100000f, 0, 1);
 
+            if (Highlighted)
+            for (int i = 0; i < 4; i++)
+            {
+                Vector2 offset = new Vector2(1, 0).RotatedBy(MathHelper.PiOver2 * i);
+                sb.Draw(texture, MyCollider.Center + offset, frame, Color.Black, rotation, drawOrigin, scale, spriteEffects, depth - (0.000001f * (i + 1)));
+            }
 
-            sb.Draw(texture, Position, frame, color, rotation, drawOrigin, scale, spriteEffects, 1f);
+            sb.Draw(texture, MyCollider.Center, frame, color, rotation, drawOrigin, scale, spriteEffects, depth);
         }
 
         public void SetState(string value)
         {
+            if (State != null && !CurrentState.HasEnded)
+                States[State].EndState();
+
             State = value;
 
             CurrentState.BeginState();
         }
+
+        public bool Highlighted { get; set; }
 
         public bool Active { get; set; } = true;
 
@@ -75,6 +87,6 @@ namespace PizzaSimulator.Content.Components
 
         public Dictionary<string, EntityState> States { get; }
 
-        public Collider Collider { get; set; }
+        public Collider MyCollider { get; set; }
     }
 }

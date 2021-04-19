@@ -6,14 +6,14 @@ namespace PizzaSimulator.Content.Components
     {
         public Camera()
         {
-            Zoom = 2f;
+            Zoom = 3f;
         }
 
         public void Follow(Entity target)
         {
             var position = Matrix.CreateTranslation(new Vector3(
-                -target.Position.X - (target.Collider.Width / 2),
-                -target.Position.Y - (target.Collider.Height / 2),
+                -target.Position.X - (target.MyCollider.Width / 2),
+                -target.Position.Y - (target.MyCollider.Height / 2),
                 0)) * GetZoom();
 
             var offset = Matrix.CreateTranslation(
@@ -34,12 +34,6 @@ namespace PizzaSimulator.Content.Components
             var position = Matrix.CreateTranslation(-p.X, -p.Y, 0) * GetZoom();
 
             Transform = position * offset;
-        }
-
-        public static Vector2 ScreenToWorldSpace(in Vector2 point)
-        {
-            Matrix invertedMatrix = Matrix.Invert(CameraManager.Camera.Transform);
-            return Vector2.Transform(point, invertedMatrix);
         }
 
         public Matrix GetZoom() => Matrix.CreateScale(new Vector3(Zoom, Zoom, 1));

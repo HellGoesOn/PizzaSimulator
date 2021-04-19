@@ -11,12 +11,16 @@ namespace PizzaSimulator.Content.Entities
         {
             Customer customer = new Customer()
             {
-                Position = p,
-                Collider = new Collider(p, 10, 16)
-
+                Position = p - new Vector2(5, 9),
+                MyCollider = new Collider(p, 10, 18)
             };
 
             EntityManager.Instance.Entities.Add(customer);
+        }
+
+        public static void KillCustomer(Entity e)
+        {
+            EntityManager.Instance.Entities.Remove(e);
         }
 
         public Customer() : base("Idle")
@@ -24,12 +28,12 @@ namespace PizzaSimulator.Content.Entities
 
         }
 
-        public override void AddStates()
+        protected override void AddStates()
         {
-            EntityState idle = new EntityState(new SpriteAnimation("Customer", 1, 5, true, 360));
+            EntityState idle = new EntityState(new SpriteAnimation("Customer", 1, 5, true, 160));
             idle.OnStateEnd += delegate { SetState("Wander"); };
 
-            EntityState wander = new EntityState(new SpriteAnimation("Customer", 1, 5, true, 360));
+            EntityState wander = new EntityState(new SpriteAnimation("Customer_Walk", 4, 8, true, 160));
             wander.OnStateBegin += delegate { Velocity = new Vector2(RNGMachine.Instance.Generator.Next(-16, 17), RNGMachine.Instance.Generator.Next(-16, 17)); };
             wander.OnStateUpdate += Wander_OnUpdate;
             wander.OnStateEnd += delegate { Velocity = Vector2.Zero; SetState("Idle"); };
@@ -46,7 +50,9 @@ namespace PizzaSimulator.Content.Entities
 
             Position += Velocity * deltaTime;
 
-            CurrentState.CurrentAnimation.SpriteFX = nVel.X < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None; 
+            States["Idle"].CurrentAnimation.SpriteFX =
+                CurrentState.CurrentAnimation.SpriteFX =
+                nVel.X < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None; 
         }
 
         protected override void UpdateSelf()
