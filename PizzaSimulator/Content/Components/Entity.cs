@@ -75,9 +75,12 @@ namespace PizzaSimulator.Content.Components
             CurrentState.BeginState();
         }
 
-        public TileCoordinates ToTileCoordinates()
+        public TileCoordinates TileCoordinates
         {
-            return new TileCoordinates((int)(Position.X / GameWorld.WORLD_WIDTH), (int)(Position.Y / GameWorld.WORLD_HEIGHT));
+            get
+            {
+                return new TileCoordinates((int)(Position.X / Tile.WIDTH), (int)(Position.Y / Tile.HEIGHT));
+            }
         }
 
         public bool Highlighted { get; set; }

@@ -12,6 +12,8 @@ namespace PizzaSimulator.Content.Components.Structs
             Y = y;
         }
 
+        public static implicit operator string(TileCoordinates c) => $"{'{'}TileX:{c.X};TileY:{c.Y}{'}'}";
+
         public int X { get; set; }
 
         public int Y { get; set; }

@@ -70,6 +70,8 @@ namespace PizzaSimulator.Content.World
 
         public Tile GetTile(int i, int j) => TileGrid[i, j];
 
+        public Tile GetTile(TileCoordinates c) => TileGrid[c.X, c.Y];
+
         public RenderTarget2D WorldRender { get; private set; }
 
         public Tile[,] TileGrid { get; set; }

@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using PizzaSimulator.Content.Components.Structs;
+using PizzaSimulator.Content.World;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,5 +25,7 @@ namespace PizzaSimulator.Extensions
             result.Y += vector.X * sin + vector.Y * cos;
             return result;
         }
+
+        public static TileCoordinates ToTileCoordinates(this Vector2 v) => new TileCoordinates((int)(v.X / Tile.WIDTH), (int)(v.X / Tile.HEIGHT));
     }
 }

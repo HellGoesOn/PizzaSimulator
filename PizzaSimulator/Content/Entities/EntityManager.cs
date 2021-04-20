@@ -28,7 +28,7 @@ namespace PizzaSimulator.Content.Entities
             for (int i = 0; i < Entities.Count; i++)
             {
                 Entity e = Entities[i];
-                spriteBatch.DrawString(Assets.DefaultFont, e.Position.ToString(), new Vector2(20, 60 + 20 * i), Color.White);
+                spriteBatch.DrawString(Assets.DefaultFont, e.Position.ToString() + e.TileCoordinates, new Vector2(20, 60 + 20 * i), Color.White);
             }
         }
 

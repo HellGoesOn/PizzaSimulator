@@ -33,7 +33,7 @@ namespace PizzaSimulator
             }
 
             if (HasRightClicked)
-                Customer.SpawnCustomer(InputManager.MouseScreenPosition);
+                Customer.SpawnCustomer(MouseScreenPosition);
 
             if (HasLeftClicked)
             {
