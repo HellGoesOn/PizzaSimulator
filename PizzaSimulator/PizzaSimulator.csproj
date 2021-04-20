@@ -28,7 +28,6 @@
     </EmbeddedResource>
     <Folder Include="Content\Assets\Sounds\" />
     <Folder Include="Content\Fonts\" />
-    <Folder Include="Content\UI\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Content\Assets\Sprites\CashRegister.png">
@@ -44,6 +43,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Content\Assets\Sprites\GrassTile.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Assets\Sprites\Pixel.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Assets\Sprites\Pudge.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Content\Assets\Sprites\Walls.png">

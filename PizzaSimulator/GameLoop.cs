@@ -3,7 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PizzaSimulator.Content.Components;
 using PizzaSimulator.Content.Entities;
+using PizzaSimulator.Content.UI;
+using PizzaSimulator.Content.UI.Elements;
 using PizzaSimulator.Content.World;
+using System;
 
 namespace PizzaSimulator
 {
@@ -22,6 +25,13 @@ namespace PizzaSimulator
             base.Initialize();
 
             ScreenManager.Instance.SetScreenSize(1280, 720);
+
+            UIManager.Instance.Initialize();
+
+
+            UIStats stats = new UIStats();
+
+            UIManager.Instance.AddElement(stats);
         }
 
         protected override void LoadContent()
@@ -61,6 +71,8 @@ namespace PizzaSimulator
 
             MyPlayer.Update();
 
+            UIManager.Instance.UpdateInterfaces();
+
             InputManager.Update();
 
             base.Update(gameTime);
@@ -88,7 +100,7 @@ namespace PizzaSimulator
             // UI Draw
             sb.Begin();
 
-            MyPlayer.DrawInfo();
+            UIManager.Instance.DrawInterfaces();
 
             sb.End();
 

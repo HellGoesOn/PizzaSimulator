@@ -26,5 +26,23 @@ namespace PizzaSimulator.Helpers
 
             sb.DrawString(Assets.DefaultFont, text, position, color);
         }
+
+        public static void DrawRectangle(Vector2 position, int width, int height, Color color)
+        {
+            SpriteBatch sb = ScreenManager.Instance.SpriteBatch;
+
+            sb.Draw
+                 (
+                     Assets.Pixel,
+                     position,
+                     new Rectangle(0, 0, width, height),
+                     color,
+                     0f,
+                     Vector2.Zero,
+                     1f,
+                     SpriteEffects.None,
+                     1
+                 );
+        }
     }
 }

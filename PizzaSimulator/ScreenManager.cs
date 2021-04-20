@@ -10,6 +10,8 @@ namespace PizzaSimulator
 
         public GraphicsDeviceManager Graphics => graphicsDeviceManager;
 
+        public GraphicsDevice Device => Graphics.GraphicsDevice;
+
         public void SetGraphicsDeviceManager(Game game) => graphicsDeviceManager = new GraphicsDeviceManager(game);
 
         public SpriteBatch SpriteBatch { get; private set; }

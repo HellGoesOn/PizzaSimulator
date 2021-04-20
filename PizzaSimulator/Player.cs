@@ -4,6 +4,7 @@ using PizzaSimulator.Content.Components;
 using PizzaSimulator.Content.Components.Structs;
 using PizzaSimulator.Content.Entities;
 using PizzaSimulator.Content.Enums;
+using PizzaSimulator.Content.UI;
 using PizzaSimulator.Content.World;
 using PizzaSimulator.Content.World.Tiles;
 using PizzaSimulator.Helpers;
@@ -34,7 +35,7 @@ namespace PizzaSimulator
 
                 DoBuildMode(ref foundTile, ref mousePos);
 
-                if (InputManager.HasRightClicked)
+                if (InputManager.HasRightClicked && !UIManager.Instance.MouseConsumedByUI)
                     BuildMode = false;
             }
             else
@@ -47,10 +48,10 @@ namespace PizzaSimulator
 
                 HighlightedTile = null;
 
-                if (InputManager.HasRightClicked)
+                if (InputManager.HasRightClicked && !UIManager.Instance.MouseConsumedByUI)
                     EntityManager.CreateEntity(SelectedEtntityType, mousePos);
 
-                if (InputManager.HasLeftClicked)
+                if (InputManager.HasLeftClicked && !UIManager.Instance.MouseConsumedByUI)
                 {
                     for (int i = EntityManager.Instance.Entities.Count - 1; i >= 0; i--)
                     {
@@ -110,7 +111,7 @@ namespace PizzaSimulator
                     break;
             }
 
-            if (InputManager.HasLeftClicked)
+            if (InputManager.HasLeftClicked && !UIManager.Instance.MouseConsumedByUI)
             {
                 if (HighlightedTile != null)
                 {
@@ -119,20 +120,6 @@ namespace PizzaSimulator
                     GameLoop.World.SetTile(AvailableTiles[SelectedTile], x, y);
                 }
             }
-        }
-
-        public void DrawInfo()
-        {
-            DrawHelper.DrawBorderedString($"BuildMode: {BuildMode}", new Vector2(10, ScreenManager.Instance.ScreenHeight - 40), BuildMode ? Color.LimeGreen : Color.Red);
-            DrawHelper.DrawBorderedString(AvailableTiles[SelectedTile].ToString(), new Vector2(10, ScreenManager.Instance.ScreenHeight - 60), Color.Goldenrod);
-
-            if (HighlightedTile != null)
-            {
-                DrawHelper.DrawBorderedString(HighlightedTile.ToString(), new Vector2(10, ScreenManager.Instance.ScreenHeight - 80), Color.Yellow);
-            }
-
-            if(!BuildMode)
-                DrawHelper.DrawBorderedString($"Selected Entity: {SelectedEtntityType}", new Vector2(10, ScreenManager.Instance.ScreenHeight - 80), Color.Aqua);
         }
 
         private int selectedTile;
