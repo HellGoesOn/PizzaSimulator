@@ -14,15 +14,20 @@ namespace PizzaSimulator
 
         public SpriteBatch SpriteBatch { get; private set; }
 
-        public void Initialize()
-        {
-            ScreenWidth = Graphics.PreferredBackBufferWidth;
-            ScreenHeight = Graphics.PreferredBackBufferHeight;
-        }
-
         public void Load()
         {
             SpriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
+        }
+
+        public void SetScreenSize(int width, int height)
+        {
+            Graphics.PreferredBackBufferWidth = width;
+            Graphics.PreferredBackBufferHeight = height;
+
+            ScreenWidth = width;
+            ScreenHeight = height;
+
+            Graphics.ApplyChanges();
         }
 
         public int ScreenWidth { get; set; }

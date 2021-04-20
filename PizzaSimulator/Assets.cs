@@ -14,11 +14,20 @@ namespace PizzaSimulator
         [Texture("Customer_Walk")]
         public static Texture2D Customer_Walk { get; set; }
 
+        [Texture("Worker_Walk")]
+        public static Texture2D Worker_Walk { get; set; }
+
+        [Texture("Worker")]
+        public static Texture2D Worker { get; set; }
+
         [Texture("GrassTile")]
         public static Texture2D GrassTile { get; set; }
 
         [Texture("FloorTile")]
         public static Texture2D FloorTile { get; set; }
+
+        [Texture("WoodenFloorTile")]
+        public static Texture2D WoodFloorTile { get; set; }
 
         [Texture("Walls")]
         public static Texture2D Walls { get; set; }

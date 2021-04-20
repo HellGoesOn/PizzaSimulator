@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using PizzaSimulator.Content.Components.Structs;
 using PizzaSimulator.Content.World.Tiles;
+using System;
 
 namespace PizzaSimulator.Content.World
 {
@@ -18,6 +19,8 @@ namespace PizzaSimulator.Content.World
             for (int i = 0; i < WORLD_WIDTH; i++)
                 for (int j = 0; j < WORLD_HEIGHT; j++)
                     TileGrid[i, j] = new GrassTile(new TileCoordinates(i, j));
+
+            PathingGrid = new PathGrid(this);
 
             UpdateWorldRender();
         }
@@ -52,18 +55,12 @@ namespace PizzaSimulator.Content.World
 
         public void SetTile(Tile newTile, int i, int j)
         {
-            TileGrid[i, j] = newTile;
+            Tile tile = (Tile)Activator.CreateInstance(newTile.GetType(), new TileCoordinates(i, j));
+
+            TileGrid[i, j] = tile;
 
             UpdateWorldRender();
-        }
-
-        public void SetTile(Tile newTile)
-        {
-            int i = newTile.Coordinates.X;
-            int j = newTile.Coordinates.Y;
-            TileGrid[i, j] = newTile;
-
-            UpdateWorldRender();
+            PathingGrid.CreateGrid(this);
         }
 
         public Rectangle GetTileBounds(int i, int j) => new Rectangle(i * Tile.WIDTH, j * Tile.HEIGHT, Tile.WIDTH, Tile.HEIGHT);
@@ -75,6 +72,8 @@ namespace PizzaSimulator.Content.World
         public RenderTarget2D WorldRender { get; private set; }
 
         public Tile[,] TileGrid { get; set; }
+
+        public PathGrid PathingGrid { get; set; }
 
         public int WidthInPixels => WORLD_WIDTH * Tile.WIDTH;
 

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PizzaSimulator.Content.Components;
+using PizzaSimulator.Content.Enums;
+using PizzaSimulator.Helpers;
 using System.Collections.Generic;
 
 namespace PizzaSimulator.Content.Entities
@@ -23,13 +25,28 @@ namespace PizzaSimulator.Content.Entities
             }
         }
 
-        public void DrawInfo(SpriteBatch spriteBatch)
+        public static void CreateEntity(EntityType entity, Vector2 position)
         {
-            for (int i = 0; i < Entities.Count; i++)
+            switch(entity)
             {
-                Entity e = Entities[i];
-                spriteBatch.DrawString(Assets.DefaultFont, e.Position.ToString() + e.TileCoordinates, new Vector2(20, 60 + 20 * i), Color.White);
+                case EntityType.Customer:
+                    Customer.SpawnCustomer(position);
+                    break;
+                case EntityType.Worker:
+                    Worker.SpawnWorker(position);
+                    break;
             }
+        }
+
+        public static void KillEntity(Entity e)
+        {
+            Entity entityRef = null;
+
+            foreach(Entity entity in Instance.Entities)
+                if (entity == e)
+                    entityRef = entity;
+
+            Instance.Entities.Remove(entityRef);
         }
 
         public float DeltaTime { get; private set; }

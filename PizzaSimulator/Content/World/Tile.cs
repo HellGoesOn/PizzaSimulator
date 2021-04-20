@@ -39,7 +39,7 @@ namespace PizzaSimulator.Content.World
 
         public override string ToString()
         {
-            return $"{GetType()}: {Coordinates.X};{Coordinates.Y}";
+            return $"Tile: {GetType().Name} at " + Coordinates;
         }
         
         public TileCoordinates Coordinates { get; set; }

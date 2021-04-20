@@ -26,33 +26,6 @@ namespace PizzaSimulator.Content.Components
                 return pos * GetZoom() * offset;
             }
         }
-        /*
-        public void Follow(Entity target)
-        {
-            var position = Matrix.CreateTranslation(new Vector3(
-                -target.Position.X - (target.MyCollider.Width / 2),
-                -target.Position.Y - (target.MyCollider.Height / 2),
-                0)) * GetZoom();
-
-            var offset = Matrix.CreateTranslation(
-                ScreenManager.Instance.ScreenWidth / 2,
-                ScreenManager.Instance.ScreenHeight / 2,
-                0);
-
-            Transform = position * offset;
-        }
-
-        public void SetPosition(Vector2 p)
-        {
-            var offset = Matrix.CreateTranslation(
-                   ScreenManager.Instance.ScreenWidth / 2,
-                   ScreenManager.Instance.ScreenHeight / 2,
-                   0);
-
-            var position = Matrix.CreateTranslation(-p.X, -p.Y, 0) * GetZoom();
-
-            Transform = position * offset;
-        }*/
 
         public void TryZoom(float amount, Vector2 pos = default)
         {
@@ -68,8 +41,8 @@ namespace PizzaSimulator.Content.Components
         {
             float offX = TargetView.Width / 2 / Zoom;
             float offY = TargetView.Height / 2 / Zoom;
-            float x = Math.Clamp(Position.X + by.X, offX, GameWorld.WORLD_WIDTH * Tile.WIDTH - (TargetView.Width + Tile.WIDTH * 2.25f) / Zoom);
-            float y = Math.Clamp(Position.Y + by.Y, offY, GameWorld.WORLD_HEIGHT * Tile.HEIGHT - TargetView.Height / Zoom);
+            float x = Math.Clamp(Position.X + by.X, offX, GameWorld.WORLD_WIDTH * Tile.WIDTH - TargetView.Width / 2 / Zoom);
+            float y = Math.Clamp(Position.Y + by.Y, offY, GameWorld.WORLD_HEIGHT * Tile.HEIGHT - TargetView.Height / 2 / Zoom);
 
             Position = new Vector2(x, y);
         }

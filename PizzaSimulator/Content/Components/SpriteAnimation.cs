@@ -107,6 +107,8 @@ namespace PizzaSimulator.Content.Components
             }
         }
 
+        public float Rotation { get; set; } = 0f;
+
         public bool IsReversed { get; set; }
 
         public int LoopTimer { get; set; }

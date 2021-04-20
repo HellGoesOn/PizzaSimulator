@@ -19,12 +19,9 @@ namespace PizzaSimulator
 
         protected override void Initialize()
         {
-            ScreenManager.Instance.Initialize();
-            this.Window.AllowUserResizing = true;
             base.Initialize();
-            ScreenManager.Instance.Graphics.PreferredBackBufferWidth = 1280;
-            ScreenManager.Instance.Graphics.PreferredBackBufferHeight = 720;
-            ScreenManager.Instance.Graphics.ApplyChanges();
+
+            ScreenManager.Instance.SetScreenSize(1280, 720);
         }
 
         protected override void LoadContent()
@@ -44,6 +41,8 @@ namespace PizzaSimulator
                 World.HeightInPixels / 2 - ScreenManager.Instance.ScreenHeight / 2 - Tile.HEIGHT / 2);
 
             Mouse.SetPosition(ScreenManager.Instance.ScreenWidth / 2, ScreenManager.Instance.ScreenHeight / 2);
+
+            MyPlayer = new Player();
         }
 
         protected override void Update(GameTime gameTime)
@@ -59,6 +58,8 @@ namespace PizzaSimulator
             {
                 e.Update();
             }
+
+            MyPlayer.Update();
 
             InputManager.Update();
 
@@ -87,8 +88,7 @@ namespace PizzaSimulator
             // UI Draw
             sb.Begin();
 
-            InputManager.DrawInfo(sb);
-            EntityManager.Instance.DrawInfo(sb);
+            MyPlayer.DrawInfo();
 
             sb.End();
 
@@ -109,8 +109,10 @@ namespace PizzaSimulator
         public void CommitApocalypse()
         {
             World = new GameWorld();
-            EntityManager.Instance.Entities.Clear();
+            //EntityManager.Instance.Entities.Clear();
         }
+
+        public static Player MyPlayer { get; private set; }
 
         public static GameWorld World { get; private set; }
 

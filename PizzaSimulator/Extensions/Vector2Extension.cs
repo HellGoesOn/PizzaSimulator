@@ -26,6 +26,6 @@ namespace PizzaSimulator.Extensions
             return result;
         }
 
-        public static TileCoordinates ToTileCoordinates(this Vector2 v) => new TileCoordinates((int)(v.X / Tile.WIDTH), (int)(v.X / Tile.HEIGHT));
+        public static TileCoordinates ToTileCoordinates(this Vector2 v) => new TileCoordinates((int)v.X / Tile.WIDTH, (int)v.Y / Tile.HEIGHT);
     }
 }

@@ -11,6 +11,8 @@ namespace PizzaSimulator.Content.Components
 {
     public abstract class Entity : IHasDraw
     {
+        public const int ENTITY_TYPES_COUNT = 2;
+
         protected Entity(string defaultState)
         {
             States = new Dictionary<string, EntityState>();
@@ -49,7 +51,7 @@ namespace PizzaSimulator.Content.Components
             Texture2D       texture       = animation.SpriteSheet;
             Rectangle       frame         = animation.FrameRect;
             Color           color         = Color.White;
-            float           rotation      = 0f;
+            float           rotation      = animation.Rotation;
             Vector2         drawOrigin    = animation.DrawOrigin;
             float           scale         = 1f;
             SpriteEffects   spriteEffects = animation.SpriteFX;
