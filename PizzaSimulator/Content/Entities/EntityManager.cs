@@ -14,18 +14,6 @@ namespace PizzaSimulator.Content.Entities
 
         public void Update()
         {
-            if (InputManager.HasRightClicked)
-                Customer.SpawnCustomer(InputManager.MouseScreenPosition);
-
-            if(InputManager.HasLeftClicked)
-            {
-                for(int i = Entities.Count - 1; i >= 0; i--)
-                {
-                    if (Entities[i].Highlighted)
-                        Customer.KillCustomer(Entities[i]);
-                }
-            }
-
             foreach (Entity e in Entities)
             {
                 e.Highlighted = false;
@@ -40,7 +28,7 @@ namespace PizzaSimulator.Content.Entities
             for (int i = 0; i < Entities.Count; i++)
             {
                 Entity e = Entities[i];
-                spriteBatch.DrawString(Loader.DefaultFont, e.Position.ToString(), new Vector2(20, 40 + 20 * i), Color.White);
+                spriteBatch.DrawString(Assets.DefaultFont, e.Position.ToString(), new Vector2(20, 60 + 20 * i), Color.White);
             }
         }
 

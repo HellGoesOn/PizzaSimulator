@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using PizzaSimulator.Content.Attributes;
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace PizzaSimulator
 {
@@ -22,6 +24,30 @@ namespace PizzaSimulator
             throw new Exception("Texture load attempt failed");
         }
 
-        public static SpriteFont DefaultFont { get; set; }
+        public static void Load()
+        {
+            foreach(PropertyInfo property in typeof(Assets).GetProperties())
+            {
+                TextureAttribute attr = (TextureAttribute)property.GetCustomAttribute(typeof(TextureAttribute));
+
+                if (attr == null)
+                    continue;
+
+                property.SetValue(null, LoadTexture(attr.Path));
+            }
+        }
+
+        public static void Unload()
+        {
+            foreach (PropertyInfo property in typeof(Assets).GetProperties())
+            {
+                TextureAttribute attr = (TextureAttribute)property.GetCustomAttribute(typeof(TextureAttribute));
+
+                if (attr == null)
+                    continue;
+
+                property.SetValue(null, null);
+            }
+        }
     }
 }

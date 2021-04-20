@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PizzaSimulator.Content.Components.Interfaces;
+using PizzaSimulator.Content.Components.Structs;
+using PizzaSimulator.Content.World;
 using PizzaSimulator.Extensions;
 using System;
 using System.Collections.Generic;
@@ -71,6 +73,11 @@ namespace PizzaSimulator.Content.Components
             State = value;
 
             CurrentState.BeginState();
+        }
+
+        public TileCoordinates ToTileCoordinates()
+        {
+            return new TileCoordinates((int)(Position.X / GameWorld.WORLD_WIDTH), (int)(Position.Y / GameWorld.WORLD_HEIGHT));
         }
 
         public bool Highlighted { get; set; }

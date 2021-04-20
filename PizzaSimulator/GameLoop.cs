@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PizzaSimulator.Content.Components;
 using PizzaSimulator.Content.Entities;
+using PizzaSimulator.Content.World;
 
 namespace PizzaSimulator
 {
@@ -32,8 +33,17 @@ namespace PizzaSimulator
 
             base.LoadContent();
 
-            Loader.DefaultFont = Content.Load<SpriteFont>("Fonts/DefaultFont");
+            Loader.Load();
 
+            Assets.DefaultFont = Content.Load<SpriteFont>("Fonts/DefaultFont");
+
+            World = new GameWorld();
+
+            CameraManager.Camera.Position =
+                new Vector2(World.WidthInPixels / 2 - ScreenManager.Instance.ScreenWidth / 2 - Tile.WIDTH / 2,
+                World.HeightInPixels / 2 - ScreenManager.Instance.ScreenHeight / 2 - Tile.HEIGHT / 2);
+
+            Mouse.SetPosition(ScreenManager.Instance.ScreenWidth / 2, ScreenManager.Instance.ScreenHeight / 2);
         }
 
         protected override void Update(GameTime gameTime)
@@ -44,8 +54,6 @@ namespace PizzaSimulator
             EntityManager.Instance.SetDeltaTime(gameTime);
 
             EntityManager.Instance.Update();
-
-            CameraManager.Camera.SetPosition(new Vector2(100, 100));
 
             foreach (Entity e in EntityManager.Instance.Entities)
             {
@@ -62,6 +70,12 @@ namespace PizzaSimulator
             GraphicsDevice.Clear(Color.Turquoise);
 
             SpriteBatch sb = ScreenManager.Instance.SpriteBatch;
+
+            // World render
+            sb.Begin(samplerState: SamplerState.PointClamp, transformMatrix: CameraManager.Camera.Transform);
+            World.DrawWorld(sb);
+            sb.End();
+
             // Entity draw
             sb.Begin(sortMode: SpriteSortMode.FrontToBack, samplerState: SamplerState.PointClamp, transformMatrix: CameraManager.Camera.Transform);
 
@@ -70,8 +84,10 @@ namespace PizzaSimulator
 
             sb.End();
 
+            // UI Draw
             sb.Begin();
 
+            InputManager.DrawInfo(sb);
             EntityManager.Instance.DrawInfo(sb);
 
             sb.End();
@@ -84,7 +100,19 @@ namespace PizzaSimulator
             EntityManager.Dispose();
             ScreenManager.Dispose();
             RNGMachine.Dispose();
+
+            Loader.Unload();
+
+            Assets.DefaultFont = null;
         }
+
+        public void CommitApocalypse()
+        {
+            World = new GameWorld();
+            EntityManager.Instance.Entities.Clear();
+        }
+
+        public static GameWorld World { get; private set; }
 
         public static GameLoop Instance { get; private set; }
     }

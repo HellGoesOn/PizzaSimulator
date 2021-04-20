@@ -38,6 +38,15 @@
     <None Update="Content\Assets\Sprites\Customer_Walk.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Assets\Sprites\FloorTile.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Assets\Sprites\GrassTile.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Assets\Sprites\Walls.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Icon.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

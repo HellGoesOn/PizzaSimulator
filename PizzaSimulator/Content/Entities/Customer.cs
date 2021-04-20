@@ -30,10 +30,10 @@ namespace PizzaSimulator.Content.Entities
 
         protected override void AddStates()
         {
-            EntityState idle = new EntityState(new SpriteAnimation("Customer", 1, 5, true, 160));
+            EntityState idle = new EntityState(new SpriteAnimation(Assets.Customer, 1, 5, true, 160));
             idle.OnStateEnd += delegate { SetState("Wander"); };
 
-            EntityState wander = new EntityState(new SpriteAnimation("Customer_Walk", 4, 8, true, 160));
+            EntityState wander = new EntityState(new SpriteAnimation(Assets.Customer_Walk, 4, 8, true, 160));
             wander.OnStateBegin += delegate { Velocity = new Vector2(RNGMachine.Instance.Generator.Next(-16, 17), RNGMachine.Instance.Generator.Next(-16, 17)); };
             wander.OnStateUpdate += Wander_OnUpdate;
             wander.OnStateEnd += delegate { Velocity = Vector2.Zero; SetState("Idle"); };

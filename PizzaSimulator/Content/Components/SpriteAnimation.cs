@@ -20,6 +20,18 @@ namespace PizzaSimulator.Content.Components
             SpriteFX = SpriteEffects.None;
         }
 
+        public SpriteAnimation(Texture2D texture, int frameCount, float fps = 5f, bool looping = false, int loopTime = -1)
+        {
+            SpriteSheet = texture;
+            FramesPerSecond = fps;
+
+            FrameCount = frameCount;
+            Looping = looping;
+            LoopTime = loopTime;
+
+            SpriteFX = SpriteEffects.None;
+        }
+
         public void Reset()
         {
             ElapsedTime = 0;
