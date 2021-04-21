@@ -30,13 +30,30 @@ namespace PizzaSimulator.Content.UI.Elements
 
         public void UpdateText(string text)
         {
+            Vector2 oldTextSize = Assets.DefaultFont.MeasureString(Text.Text);
             Text.SetTextSilent(text);
 
-            while (Width < Text.Width * 2)
-                SetWidth(Width + 1);
+            if ((int)oldTextSize.X < Text.Width)
+            {
+                while (Width < Text.Width * 2)
+                    SetWidth(Width + 1);
+            }
+            else if((int)oldTextSize.X > Text.Width)
+            {
+                while (Width > Text.Width * 2)
+                    SetWidth(Width - 1);
+            }
 
-            while (Height < Text.Height * 2)
-                SetHeight(Height + 1);
+            if ((int)oldTextSize.Y < Text.Height)
+            {
+                while (Width < Text.Height * 2)
+                    SetWidth(Height + 1);
+            }
+            else if ((int)oldTextSize.Y > Text.Height)
+            {
+                while (Width > Text.Height * 2)
+                    SetWidth(Height - 1);
+            }
 
             Text.RecalcAlignment();
         }
