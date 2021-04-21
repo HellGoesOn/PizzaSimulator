@@ -67,6 +67,9 @@ namespace PizzaSimulator
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (!this.IsActive)
+                return;
+
             if(GameStateManager.Instance.CurrentGameState == GameState.None)
                 GameStateManager.Instance.SwitchState(GameState.GameMenu);
 

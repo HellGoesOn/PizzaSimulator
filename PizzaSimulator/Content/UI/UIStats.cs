@@ -99,7 +99,7 @@ namespace PizzaSimulator.Content.UI
 
 
             Append(Panel);
-            //Append(new UIFadeIn());
+            Append(new UIFadeIn());
         }
 
         private void EntitySelect_OnClick(object sender, EventArgs e)
