@@ -85,9 +85,9 @@ namespace PizzaSimulator
             int dstY = Math.Abs(a.Y - b.Y);
 
             if (dstX > dstY)
-                return 14 * dstY + 10 * (dstX - dstY);
+                return 10 * (dstX - dstY);
 
-            return 14 * dstX + 10 * (dstY - dstX);
+            return  10 * (dstY - dstX);
         }
 
         public static Node NodeFromCoordinates(PathGrid grid, Vector2 position)

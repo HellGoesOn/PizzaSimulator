@@ -25,8 +25,8 @@ namespace PizzaSimulator
             {
                 for (int y = 0; y < worldSizeY; y++)
                 {
-                    bool unwalkable = world.TileGrid[x, y].GetType() == typeof(FloorTile);
-                    Grid[x, y] = new Node(x, y, !unwalkable);
+                    bool walkable = world.TileGrid[x, y].GetType() != typeof(WallTile);
+                    Grid[x, y] = new Node(x, y, walkable);
                 }
             }
         }

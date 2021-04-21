@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PizzaSimulator.Content.Components;
 using PizzaSimulator.Content.Components.Structs;
+using PizzaSimulator.Content.Entities;
 using PizzaSimulator.Content.Enums;
 using PizzaSimulator.Content.World.Tiles;
 using System;
@@ -57,14 +59,19 @@ namespace PizzaSimulator.Content.World
             ScreenManager.Instance.Graphics.GraphicsDevice.SetRenderTarget(null);
         }
 
-        public void SetTile(Tile newTile, int i, int j)
+        public Tile SetTile(Tile newTile, int i, int j)
         {
             Tile tile = (Tile)Activator.CreateInstance(newTile.GetType(), new TileCoordinates(i, j));
+
+            if (ImportantTiles.Contains(TileGrid[i, j]))
+                ImportantTiles.Remove(TileGrid[i, j]);
 
             TileGrid[i, j] = tile;
 
             UpdateWorldRender();
             PathingGrid.CreateGrid(this);
+
+            return TileGrid[i, j];
         }
 
         public void AddSubTile(SubTile subTile, int i, int j)
@@ -75,6 +82,19 @@ namespace PizzaSimulator.Content.World
 
             ImportantTiles.Add(tile);
             UpdateWorldRender();
+        }
+
+        public List<Entity> ContainingEntities(Tile tile)
+        {
+            List<Entity> entityList = new List<Entity>();
+
+            foreach (Entity e in EntityManager.Instance.Entities)
+            {
+                if (GetTileBounds(tile.Coordinates.X, tile.Coordinates.Y).Contains(e.Position))
+                    entityList.Add(e);
+            }
+
+            return entityList;
         }
 
         public Rectangle GetTileBounds(int i, int j) => new Rectangle(i * Tile.WIDTH, j * Tile.HEIGHT, Tile.WIDTH, Tile.HEIGHT);

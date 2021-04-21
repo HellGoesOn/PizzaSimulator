@@ -99,7 +99,7 @@ namespace PizzaSimulator.Content.UI
 
 
             Append(Panel);
-            Append(new UIFadeIn());
+            //Append(new UIFadeIn());
         }
 
         private void EntitySelect_OnClick(object sender, EventArgs e)
@@ -136,7 +136,10 @@ namespace PizzaSimulator.Content.UI
             rightEntity.SetPosition(new Vector2(34 + EntityButton.ScaledWidth, 10));
 
             if (!plr.HasActions)
-                actionText.SetText("No Action");
+                actionText.SetText($"{plr.Findtile(InputManager.MouseScreenPosition).SubTiles[0, 0]}" +
+                    $"{plr.Findtile(InputManager.MouseScreenPosition).SubTiles[0, 1]}" +
+                    $"{plr.Findtile(InputManager.MouseScreenPosition).SubTiles[1, 0]}" +
+                    $"{plr.Findtile(InputManager.MouseScreenPosition).SubTiles[1, 1]}");
         }
 
         private UITextButton rightEntity;

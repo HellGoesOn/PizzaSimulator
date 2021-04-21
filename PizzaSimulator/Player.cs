@@ -96,7 +96,8 @@ namespace PizzaSimulator
         {
             new GrassTile(new TileCoordinates()),
             new FloorTile(new TileCoordinates()),
-            new WoodFloorTile(new TileCoordinates())
+            new WoodFloorTile(new TileCoordinates()),
+            new WallTile(new TileCoordinates())
         };
 
         private EntityType _selectedEntityType;
@@ -127,10 +128,10 @@ namespace PizzaSimulator
                 Assets.BuildSound.Play();
 
                 TileCoordinates c = tile.Coordinates;
-                GameLoop.World.SetTile(AvailableTiles[SelectedTile], c.X, c.Y);
+                Tile newTile = GameLoop.World.SetTile(AvailableTiles[selectedTile], c.X, c.Y);
 
                 if (SelectedTile == (int)TileType.Floor)
-                    tile.TryAddSubtile(new CashRegister());
+                    GameLoop.World.AddSubTile(new CashRegister(), newTile.Coordinates.X, newTile.Coordinates.Y);
             }    
         }
 

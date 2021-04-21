@@ -8,6 +8,7 @@ namespace PizzaSimulator.Content.Enums
     {
         Grass,
         Floor,
-        WoodenFloor
+        WoodenFloor,
+        Wall
     }
 }

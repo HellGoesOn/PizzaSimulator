@@ -26,6 +26,11 @@ namespace PizzaSimulator.Extensions
             return result;
         }
 
+        public static float ToRotation(this Vector2 v)
+        {
+            return (float)Math.Atan2(v.Y, v.X);
+        }
+
         public static TileCoordinates ToTileCoordinates(this Vector2 v) => new TileCoordinates((int)v.X / Tile.WIDTH, (int)v.Y / Tile.HEIGHT);
     }
 }

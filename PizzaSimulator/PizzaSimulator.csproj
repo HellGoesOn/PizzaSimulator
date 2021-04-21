@@ -67,6 +67,9 @@
     <None Update="Content\Assets\Sprites\Pudge.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Assets\Sprites\Wall.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Assets\Sprites\Walls.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

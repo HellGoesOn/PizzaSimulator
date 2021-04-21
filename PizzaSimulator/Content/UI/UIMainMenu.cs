@@ -54,7 +54,7 @@ namespace PizzaSimulator.Content.UI
             fadeIn.Append(logo);
             fadeIn.TakesPriority = true;
 
-            Append(fadeIn);
+            //Append(fadeIn);
             logoScale = 0;
         }
 

@@ -16,6 +16,8 @@ namespace PizzaSimulator
             Walkable = walkable;
         }
 
+        public static Vector2 ToWorldPos(Node node) => Tile.GetCenter(GameLoop.World.GetTile(node.X, node.Y));
+
         public int GCost { get; set; }
 
         public int HCost { get; set; }

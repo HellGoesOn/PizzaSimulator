@@ -2,10 +2,13 @@
 using Microsoft.Xna.Framework.Graphics;
 using PizzaSimulator.Content.Components;
 using PizzaSimulator.Content.Components.Structs;
+using PizzaSimulator.Content.World;
 using PizzaSimulator.Content.World.Tiles;
+using PizzaSimulator.Content.World.Tiles.SubTiles;
 using PizzaSimulator.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PizzaSimulator.Content.Entities
 {
@@ -34,17 +37,68 @@ namespace PizzaSimulator.Content.Entities
 
         protected override void AddStates()
         {
+            path = new List<Node>();
             EntityState idle = new EntityState(new SpriteAnimation(Assets.Customer, 1, 5, true, 160));
-            idle.OnStateEnd += delegate { SetState("Wander"); };
-
+            idle.OnStateEnd += delegate { PickState(); };
             EntityState wander = new EntityState(new SpriteAnimation(Assets.Customer_Walk, 4, 8, true, 160));
             wander.OnStateBegin += delegate { Velocity = new Vector2(RNGMachine.Instance.Generator.Next(-16, 17), RNGMachine.Instance.Generator.Next(-16, 17)); };
             wander.OnStateUpdate += Wander_OnUpdate;
             wander.OnStateEnd += delegate { Velocity = Vector2.Zero; SetState("Idle"); };
-            wander.OnStateBegin += WanderTheFuckOff;
+
+            EntityState tracingPath = new EntityState(new SpriteAnimation(Assets.Customer_Walk, 4, 8, true));
+            tracingPath.OnStateUpdate += delegate { TracePath(); };
+            tracingPath.OnStateEnd += delegate { Velocity = Vector2.Zero; SetState("Idle"); };
 
             States.Add("Idle", idle);
             States.Add("Wander", wander);
+            States.Add("TracingPath", tracingPath);
+        }
+
+        private void PickState()
+        {
+            Tile tile = null;
+
+            foreach (Tile t in GameLoop.World.ImportantTiles)
+            {
+                if (GameLoop.World.ContainingEntities(t).Count(x => x.GetType() == typeof(Worker)) > 0 && t.HasSubtile(typeof(CashRegister)))
+                {
+                    tile = t;
+                    break;
+                }
+            }
+
+            if (tile == null)
+            {
+                SetState("Wander");
+                return;
+            }
+
+            path.Clear();
+
+            path = Pathfinding.FindPath(GameLoop.World.PathingGrid, Position, Tile.GetCenter(tile));
+            SetState("TracingPath");
+        }
+
+        private void TracePath()
+        {
+            if (path.Count <= 0)
+            {
+                SetState("Idle");
+                return;
+            }
+
+            float deltaTime = EntityManager.Instance.DeltaTime;
+
+            Node currentNode = path[0];
+
+            Vector2 destination = Node.ToWorldPos(currentNode);
+
+            Velocity = Vector2.Normalize(destination - (Position + new Vector2(5))) * 22f;
+
+            if (Vector2.Distance(Position + new Vector2(5), destination) <= 4f)
+                path.RemoveAt(0);
+
+            Position += Velocity * deltaTime;
         }
 
         private void Wander_OnUpdate(object sender)
@@ -65,25 +119,6 @@ namespace PizzaSimulator.Content.Entities
             CurrentState.Update();
         }
 
-        private void WanderTheFuckOff(object sender)
-        {
-            Worker worker = null;
-            foreach(Entity e in EntityManager.Instance.Entities)
-                if(e is Worker worker1)
-                {
-                    worker = worker1;
-                    break;
-                }
-
-            if (worker == null)
-                return;
-
-            List<Node> path = Pathfinding.FindPath(GameLoop.World.PathingGrid, Position, worker.Position);
-
-            foreach (Node node in path)
-            {
-                GameLoop.World.SetTile(new WoodFloorTile(new TileCoordinates(node.X, node.Y)), node.X, node.Y);
-            }
-        }
+        private List<Node> path;
     }
 }

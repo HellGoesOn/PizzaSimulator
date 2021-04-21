@@ -33,8 +33,8 @@ namespace PizzaSimulator
         [Texture("CashRegister")]
         public static Texture2D CashRegister { get; set; }
 
-        [Texture("Walls")]
-        public static Texture2D Walls { get; set; }
+        [Texture("Wall")]
+        public static Texture2D Wall { get; set; }
 
         [Texture("Pixel")]
         public static Texture2D Pixel { get; set; }
