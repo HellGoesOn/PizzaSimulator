@@ -7,6 +7,7 @@ using PizzaSimulator.Content.Enums;
 using PizzaSimulator.Content.UI;
 using PizzaSimulator.Content.World;
 using PizzaSimulator.Content.World.Tiles;
+using PizzaSimulator.Extensions;
 using PizzaSimulator.Helpers;
 using System;
 using System.Collections.Generic;
@@ -16,58 +17,29 @@ namespace PizzaSimulator
 {
     public class Player
     {
+        public event EventHandler OnLeftClick;
+
         public void Update()
         {
-            bool foundTile = false;
-
             float scrollWheelValue = InputManager.CurrentMouseState.ScrollWheelValue;
             float oldScrollWheelValue = InputManager.OldMouseState.ScrollWheelValue;
 
             Vector2 mousePos = InputManager.MouseScreenPosition;
 
-            if (BuildMode)
+            if (InputManager.HasLeftClicked && !UIManager.Instance.MouseConsumedByUI)
             {
-                if (InputManager.IsKeyPressed(Keys.Q))
-                    SelectedTile--;
-
-                if (InputManager.IsKeyPressed(Keys.E))
-                    SelectedTile++;
-
-                DoBuildMode(ref foundTile, ref mousePos);
-
-                if (InputManager.HasRightClicked && !UIManager.Instance.MouseConsumedByUI)
-                    BuildMode = false;
+                OnLeftClick?.Invoke(this, new EventArgs());
             }
-            else
+
+            if (InputManager.HasRightClicked)
             {
-                if (InputManager.IsKeyPressed(Keys.Q))
-                    SelectedEtntityType--;
-
-                if (InputManager.IsKeyPressed(Keys.E))
-                    SelectedEtntityType++;
-
-                HighlightedTile = null;
-
-                if (InputManager.HasRightClicked && !UIManager.Instance.MouseConsumedByUI)
-                    EntityManager.CreateEntity(SelectedEtntityType, mousePos);
-
-                if (InputManager.HasLeftClicked && !UIManager.Instance.MouseConsumedByUI)
+                BuildMode = false;
+                if (OnLeftClick != null)
                 {
-                    for (int i = EntityManager.Instance.Entities.Count - 1; i >= 0; i--)
-                    {
-                        Entity e = EntityManager.Instance.Entities[i];
-
-                        if (e.Highlighted)
-                        {
-                            EntityManager.KillEntity(e);
-                            break;
-                        }
-                    }
+                    foreach (var d in OnLeftClick.GetInvocationList())
+                        OnLeftClick -= (d as EventHandler);
                 }
             }
-
-            if (InputManager.IsKeyPressed(Keys.Space))
-                BuildMode = !BuildMode;
 
             if (InputManager.IsKeyPressed(Keys.R))
                 GameLoop.Instance.CommitApocalypse();
@@ -92,34 +64,11 @@ namespace PizzaSimulator
                 CameraManager.Camera.MoveBy(new Vector2(0, cameraSpeed));
         }
 
-        private void DoBuildMode(ref bool foundTile, ref Vector2 mousePos)
+        public Tile Findtile(Vector2 mousePos)
         {
-            for (int i = 0; i < GameWorld.WORLD_WIDTH; i++)
-            {
-                for (int j = 0; j < GameWorld.WORLD_HEIGHT; j++)
-                {
-                    HighlightedTile = null;
-                    if (GameLoop.World.GetTileBounds(i, j).Contains(mousePos.ToPoint()))
-                    {
-                        HighlightedTile = GameLoop.World.GetTile(i, j);
-                        foundTile = true;
-                        break;
-                    }
-                }
+            TileCoordinates coords = mousePos.ToTileCoordinates();
 
-                if (foundTile)
-                    break;
-            }
-
-            if (InputManager.HasLeftClicked && !UIManager.Instance.MouseConsumedByUI)
-            {
-                if (HighlightedTile != null)
-                {
-                    int x = HighlightedTile.Coordinates.X;
-                    int y = HighlightedTile.Coordinates.Y;
-                    GameLoop.World.SetTile(AvailableTiles[SelectedTile], x, y);
-                }
-            }
+            return GameLoop.World.GetTile(coords);
         }
 
         private int selectedTile;
@@ -145,7 +94,7 @@ namespace PizzaSimulator
         };
 
         private EntityType _selectedEntityType;
-        public EntityType SelectedEtntityType
+        public EntityType SelectedEntityType
         {
             get => _selectedEntityType;
             set
@@ -159,8 +108,24 @@ namespace PizzaSimulator
             }
         }
 
-        public Tile HighlightedTile { get; set; }
+        public Tile HighlightedTile => GameLoop.World.GetTile(InputManager.MouseScreenPosition.ToTileCoordinates());
 
         public bool BuildMode { get; set; }
+
+        public void DoBuild(object sender, EventArgs args)
+        {
+            Tile tile = Findtile(InputManager.MouseScreenPosition);
+
+            if (tile != null)
+            {
+                TileCoordinates c = tile.Coordinates;
+                GameLoop.World.SetTile(AvailableTiles[SelectedTile], c.X, c.Y);
+            }    
+        }
+
+        public void DoSpawn(object sender, EventArgs args)
+        {
+            EntityManager.CreateEntity(GameLoop.MyPlayer.SelectedEntityType, InputManager.MouseScreenPosition);
+        }
     }
 }

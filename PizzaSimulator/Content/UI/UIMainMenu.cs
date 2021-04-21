@@ -15,10 +15,12 @@ namespace PizzaSimulator.Content.UI
 
             ConsumesMouse = false;
 
-            Logo = new UIImage(new SpriteAnimation(Assets.Logo, 1, 1, true));
-            Logo.HAlign = 0.5f;
-            Logo.VAlign = 0.2f;
-            Logo.Scale = 3f;
+            Logo = new UIImage(new SpriteAnimation(Assets.Logo, 1, 1, true))
+            {
+                HAlign = 0.5f,
+                VAlign = 0.2f,
+                Scale = 3f
+            };
 
             UITextButton startGame = new UITextButton("New Game", 200, 50);
             startGame.Text.Scale = 1f;
@@ -35,8 +37,8 @@ namespace PizzaSimulator.Content.UI
             endGame.OnClick += EndGame_OnClick;
 
             UIElement panel = new UIElement();
-            panel.SetWidth(300);
-            panel.SetHeight(200);
+            panel.SetWidth(240);
+            panel.SetHeight(180);
             panel.HAlign = 0.5f;
             panel.VAlign = 0.95f;
 
@@ -48,10 +50,12 @@ namespace PizzaSimulator.Content.UI
 
             UIFadeIn fadeIn = new UIFadeIn() { Opacity = 3f };
 
-            UIBKBLogo logo = new UIBKBLogo();
-            logo.HAlign = 0.5f;
-            logo.VAlign = 0.5f;
-            logo.Scale = 0.5f;
+            UIBKBLogo logo = new UIBKBLogo
+            {
+                HAlign = 0.5f,
+                VAlign = 0.5f,
+                Scale = 0.5f
+            };
 
             fadeIn.Append(logo);
 
@@ -89,9 +93,7 @@ namespace PizzaSimulator.Content.UI
 
         protected override void DrawSelf()
         {
-            UIElement element = null;
-
-            element = UIManager.Instance.GetSelectedElement();
+            UIElement element = UIManager.Instance.GetSelectedElement();
 
             if(element != null)
             {

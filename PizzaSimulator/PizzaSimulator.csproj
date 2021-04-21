@@ -35,6 +35,7 @@
       <LogicalName>Icon.bmp</LogicalName>
     </EmbeddedResource>
     <Folder Include="Content\Fonts\" />
+    <Folder Include="Content\World\Tiles\SubTiles\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Content\Assets\Sprites\BKB.png">

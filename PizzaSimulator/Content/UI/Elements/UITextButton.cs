@@ -10,10 +10,12 @@ namespace PizzaSimulator.Content.UI.Elements
         public UITextButton(string text, int width, int height)
         {
             ConsumesMouse = true;
-            Text = new UIText(text);
-            Text.HAlign = 0.5f;
-            Text.VAlign = 0.5f;
-            Text.TakesPriority = false;
+            Text = new UIText(text)
+            {
+                HAlign = 0.5f,
+                VAlign = 0.5f,
+                TakesPriority = false
+            };
 
             this.TakesPriority = true;
             SetWidth(width);

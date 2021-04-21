@@ -70,6 +70,8 @@ namespace PizzaSimulator.Content.World
             Tile tile = TileGrid[i, j];
 
             tile.TryAddSubtile(subTile, orientation);
+
+            ImportantTiles.Add(tile);
         }
 
         public Rectangle GetTileBounds(int i, int j) => new Rectangle(i * Tile.WIDTH, j * Tile.HEIGHT, Tile.WIDTH, Tile.HEIGHT);
