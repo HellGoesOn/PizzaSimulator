@@ -34,10 +34,12 @@
     <EmbeddedResource Include="Icon.bmp">
       <LogicalName>Icon.bmp</LogicalName>
     </EmbeddedResource>
-    <Folder Include="Content\Assets\Sounds\" />
     <Folder Include="Content\Fonts\" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Content\Assets\Sprites\BKB.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Assets\Sprites\CashRegister.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

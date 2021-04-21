@@ -15,10 +15,10 @@ namespace PizzaSimulator.Content.UI
 
             ConsumesMouse = false;
 
-            UIImage logo = new UIImage(new SpriteAnimation(Assets.Logo, 1, 1, true));
-            logo.HAlign = 0.6f;
-            logo.VAlign = 0.4f;
-            logo.Scale = 3f;
+            Logo = new UIImage(new SpriteAnimation(Assets.Logo, 1, 1, true));
+            Logo.HAlign = 0.5f;
+            Logo.VAlign = 0.2f;
+            Logo.Scale = 3f;
 
             UITextButton startGame = new UITextButton("New Game", 200, 50);
             startGame.Text.Scale = 1f;
@@ -36,18 +36,27 @@ namespace PizzaSimulator.Content.UI
 
             UIElement panel = new UIElement();
             panel.SetWidth(300);
-            panel.SetHeight(300);
+            panel.SetHeight(200);
             panel.HAlign = 0.5f;
-            panel.VAlign = 0.75f;
-
-            Console.WriteLine($"{startGame.Width}{startGame.Height}");
-            Console.WriteLine($"{startGame.RealPosition}");
+            panel.VAlign = 0.95f;
 
             panel.Append(startGame);
             panel.Append(endGame);
 
-            Append(logo);
+            Append(Logo);
             Append(panel);
+
+            UIFadeIn fadeIn = new UIFadeIn() { Opacity = 3f };
+
+            UIBKBLogo logo = new UIBKBLogo();
+            logo.HAlign = 0.5f;
+            logo.VAlign = 0.5f;
+            logo.Scale = 0.5f;
+
+            fadeIn.Append(logo);
+
+            Append(fadeIn);
+            logoScale = 0;
         }
 
         private void EndGame_OnClick(object sender, EventArgs e)
@@ -58,6 +67,24 @@ namespace PizzaSimulator.Content.UI
         private void StartGame_OnClick(object sender, EventArgs e)
         {
             GameStateManager.Instance.SwitchState(GameState.StartPLay);
+        }
+
+        protected override void UpdateSelf()
+        {
+            base.UpdateSelf();
+
+            logoScale += reverseScaleGain ? -0.005f : 0.005f;
+
+            if (Math.Abs(logoScale) > 0.5f)
+                reverseScaleGain = !reverseScaleGain;
+
+            Console.WriteLine($"{Logo.RealPosition}{Logo.Width}{Logo.Height}");
+
+            if (Logo != null)
+            {
+                Logo.Texture.Rotation = logoScale * 0.12f;
+                Logo.Scale = 3 + logoScale;
+            }
         }
 
         protected override void DrawSelf()
@@ -71,5 +98,11 @@ namespace PizzaSimulator.Content.UI
                 DrawHelper.DrawBorderedString(element.GetType().Name, new Vector2(20), Color.White);
             }
         }
+
+        private float logoScale;
+
+        private bool reverseScaleGain;
+
+        protected UIImage Logo { get; set; }
     }
 }

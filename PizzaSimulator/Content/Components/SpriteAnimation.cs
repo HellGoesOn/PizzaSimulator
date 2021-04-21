@@ -127,7 +127,7 @@ namespace PizzaSimulator.Content.Components
 
         public bool Active { get; set; } = true;
 
-        public float Scale { get; set; } = 1;
+        public float Scale { get; set; } = 1f;
 
         public SpriteEffects SpriteFX { get; set; }
 

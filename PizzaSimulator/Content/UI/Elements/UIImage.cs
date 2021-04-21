@@ -27,13 +27,13 @@ namespace PizzaSimulator.Content.UI.Elements
             SpriteAnimation animation = Texture;
             Texture2D texture = animation.SpriteSheet;
             Rectangle frame = animation.FrameRect;
-            Color color = Color.White;
+            Color color = Color.White * Opacity;
             float rotation = animation.Rotation;
             Vector2 drawOrigin = animation.DrawOrigin;
             float scale = animation.Scale;
             SpriteEffects spriteEffects = animation.SpriteFX;
 
-            sb.Draw(texture, RealPosition - Center, frame, color, rotation, drawOrigin, scale, spriteEffects, 1f);
+            sb.Draw(texture, Center, frame, color, rotation, drawOrigin, scale, spriteEffects, 1f);
         }
 
         public SpriteAnimation Texture { get; set; }

@@ -12,6 +12,7 @@ namespace PizzaSimulator.Content.UI
         public void Initialize()
         {
             Elements = new List<UIElement>();
+            ElementsToRemove = new HashSet<UIElement>();
         }
 
         public void UpdateInterfaces()
@@ -23,6 +24,11 @@ namespace PizzaSimulator.Content.UI
 
             if (InputManager.HasLeftClicked)
                 GetSelectedElement()?.Click();
+
+            foreach (UIElement e in ElementsToRemove)
+                Elements.Remove(e);
+
+            ElementsToRemove.Clear();
         }
 
         public void DrawInterfaces()
@@ -90,6 +96,8 @@ namespace PizzaSimulator.Content.UI
                 return Elements.Count(x => x.IsMouseHovering || x.Children.Count(x => x.IsMouseHovering) > 0) > 0;
             }
         }
+
+        public HashSet<UIElement> ElementsToRemove { get; private set; }
 
         public List<UIElement> Elements { get; private set; }
     }

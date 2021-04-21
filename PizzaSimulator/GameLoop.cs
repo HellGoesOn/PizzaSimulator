@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using PizzaSimulator.Content.Components;
 using PizzaSimulator.Content.Entities;
 using PizzaSimulator.Content.UI;
@@ -12,6 +13,8 @@ namespace PizzaSimulator
 {
     public class GameLoop : Game
     {
+        Song song;
+
         public GameLoop()
         {
             ScreenManager.Instance.SetGraphicsDeviceManager(this);
@@ -29,11 +32,20 @@ namespace PizzaSimulator
             ScreenManager.Instance.Load();
 
             ScreenManager.Instance.SetScreenSize(1280, 720);
+
+            Mouse.SetPosition(ScreenManager.Instance.ScreenWidth / 2, ScreenManager.Instance.ScreenHeight / 2);
         }
 
         protected override void LoadContent()
         {
             base.LoadContent();
+
+            this.song = Content.Load<Song>("Assets/Music/MainMenu");
+
+            MediaPlayer.Play(song);
+            MediaPlayer.Volume = 0.25f;
+
+            MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
 
             Loader.Load();
 
@@ -42,14 +54,21 @@ namespace PizzaSimulator
             CameraManager.Camera.Position =
                 new Vector2(GameWorld.WidthInPixels / 2 - ScreenManager.Instance.ScreenWidth / 2 - Tile.WIDTH / 2,
                 GameWorld.HeightInPixels / 2 - ScreenManager.Instance.ScreenHeight / 2 - Tile.HEIGHT / 2);
+        }
 
-            Mouse.SetPosition(ScreenManager.Instance.ScreenWidth / 2, ScreenManager.Instance.ScreenHeight / 2);
+        private void MediaPlayer_MediaStateChanged(object sender, EventArgs e)
+        {
+            MediaPlayer.Volume = 0.25f;
+            MediaPlayer.Play(song);
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            if (!this.IsActive)
+                return;
 
             if(GameStateManager.Instance.CurrentGameState == GameState.None)
                 GameStateManager.Instance.SwitchState(GameState.GameMenu);
@@ -74,9 +93,19 @@ namespace PizzaSimulator
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Turquoise);
+            GraphicsDevice.Clear(Color.Black);
 
             SpriteBatch sb = ScreenManager.Instance.SpriteBatch;
+
+            if (!this.IsActive)
+            {
+                MediaPlayer.Stop();
+                return;
+            }
+            else
+            {
+                MediaPlayer.Resume();
+            }
 
             // World render
             sb.Begin(samplerState: SamplerState.PointClamp, transformMatrix: CameraManager.Camera.Transform);

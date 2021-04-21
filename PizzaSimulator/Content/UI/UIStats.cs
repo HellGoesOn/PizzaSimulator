@@ -20,8 +20,8 @@ namespace PizzaSimulator.Content.UI
             Panel = new UIElement();
             Panel.SetWidth(300);
             Panel.SetHeight(200);
-            Panel.HAlign = 0.1f;
-            Panel.VAlign = 1f;
+            Panel.HAlign = 0.005f;
+            Panel.VAlign = 0.95f;
             Panel.RecalcAlignmentForChildren();
 
             EntitySelect = new UITextButton("", 100, 40);
@@ -39,6 +39,7 @@ namespace PizzaSimulator.Content.UI
 
 
             Append(Panel);
+            Append(new UIFadeIn());
         }
 
         protected override void UpdateSelf()

@@ -12,6 +12,7 @@ namespace PizzaSimulator.Content.UI
         public UIElement()
         {
             Children = new List<UIElement>();
+            ChildrenToDisown = new HashSet<UIElement>();
             Initialize();
         }
 
@@ -35,6 +36,11 @@ namespace PizzaSimulator.Content.UI
 
             foreach (UIElement c in Children)
                 c.Update();
+
+            foreach (UIElement e in ChildrenToDisown)
+                Children.Remove(e);
+
+            ChildrenToDisown.Clear();
         }
 
         public void RecalcAlignment()
@@ -53,20 +59,23 @@ namespace PizzaSimulator.Content.UI
                 return;
             }
 
-            float hAlignX = screenWidth * HAlign * (1 / Scale);
-            float hAlignY = screenHeight * VAlign * (1 / Scale);
+            float hAlignX = screenWidth * HAlign;
+            float hAlignY = screenHeight * VAlign;
 
             if (hasParent)
             {
-                float parentScale = 1 / Parent.Scale;
-                float myScale = 1 / Scale;
+                float xx = Math.Clamp(ScaledWidth, 0, Parent.ScaledWidth);
+                float yy = Math.Clamp(ScaledHeight, 0, Parent.ScaledHeight);
 
-                hAlignX = Parent.Width * parentScale * HAlign - Width * myScale * 0.5f;
-                hAlignY = Parent.Height * parentScale * VAlign - Height * myScale * 0.5f;
+                hAlignX = Parent.ScaledWidth * HAlign - xx * HAlign;
+                hAlignY = Parent.ScaledHeight * VAlign - yy * VAlign;
 
-                hAlignX = Math.Clamp(hAlignX, 4, (Parent.Width - Width - 2));
-                hAlignY = Math.Clamp(hAlignY, 4, (Parent.Height - Height - 2));
+                /*hAlignX = Parent.Width * HAlign - Width * 0.5f;
+                hAlignY = Parent.Height * VAlign - Height * 0.5f;
 
+                hAlignX = Math.Clamp(hAlignX, 4, Parent.Width - 4);
+                hAlignY = Math.Clamp(hAlignY, 4, Parent.Height - 4);
+                */
 
                 RealPosition = Parent.RealPosition + new Vector2(hAlignX, hAlignY);
                 return;
@@ -123,6 +132,10 @@ namespace PizzaSimulator.Content.UI
             Height = height;
         }
 
+        public int ScaledWidth => (int)(Width * Scale);
+        public int ScaledHeight => (int)(Height * Scale);
+
+
         public bool TakesPriority { get; set; } = false;
 
         public bool ConsumesMouse { get; set; } = true;
@@ -132,20 +145,17 @@ namespace PizzaSimulator.Content.UI
 
         public Vector2 Position { get; private set; }
 
-        public Vector2 Center => Position + new Vector2((int)(Width * 0.5f), (int)(Height * 0.5f));
+        public Vector2 Center => RealPosition + new Vector2((int)(ScaledWidth * 0.5f), (int)(ScaledHeight * 0.5f));
 
         public Vector2 RealPosition { get; private set; }
 
-        public int Width { get; private set; }
+        public int Width { get; set; }
 
-        public int Height { get; private set; }
+        public int Height { get; set; }
 
-        private float scale = 1f;
-        public float Scale
-        {
-            get => scale;
-            set => scale = Math.Clamp(value, 0, int.MaxValue);
-        }
+        public float Opacity { get; set; } = 1f;
+
+        public float Scale { get; set; } = 1f;
 
         public bool IsMouseHovering => Area.Contains(InputManager.MouseWorldPosition) && ConsumesMouse;
 
@@ -154,5 +164,7 @@ namespace PizzaSimulator.Content.UI
         public UIElement Parent { get; private set; }
 
         public List<UIElement> Children { get; private set; }
+
+        public HashSet<UIElement> ChildrenToDisown { get; private set; }
     }
 }

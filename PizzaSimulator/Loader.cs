@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using PizzaSimulator.Content.Attributes;
 using System;
 using System.IO;
@@ -24,16 +26,24 @@ namespace PizzaSimulator
             throw new Exception("Texture load attempt failed");
         }
 
+        public static SoundEffect LoadSound(string path)
+        {
+            return GameLoop.Instance.Content.Load<SoundEffect>("Assets/" + path);
+        }
+
         public static void Load()
         {
             foreach(PropertyInfo property in typeof(Assets).GetProperties())
             {
-                TextureAttribute attr = (TextureAttribute)property.GetCustomAttribute(typeof(TextureAttribute));
+                TextureAttribute txAtr = (TextureAttribute)property.GetCustomAttribute(typeof(TextureAttribute));
 
-                if (attr == null)
-                    continue;
+                SoundEffectAttribute sfxAtr = (SoundEffectAttribute)property.GetCustomAttribute(typeof(SoundEffectAttribute));
 
-                property.SetValue(null, LoadTexture(attr.Path));
+                if(txAtr != null)
+                    property.SetValue(null, LoadTexture(txAtr.Path));
+
+                if(sfxAtr != null)
+                    property.SetValue(null, LoadSound(sfxAtr.Path));
             }
         }
 
@@ -43,10 +53,13 @@ namespace PizzaSimulator
             {
                 TextureAttribute attr = (TextureAttribute)property.GetCustomAttribute(typeof(TextureAttribute));
 
-                if (attr == null)
-                    continue;
+                SoundEffectAttribute sfxAtr = (SoundEffectAttribute)property.GetCustomAttribute(typeof(SoundEffectAttribute));
 
-                property.SetValue(null, null);
+                if (attr != null)
+                    property.SetValue(null, null);
+
+                if (sfxAtr != null)
+                    property.SetValue(null, LoadSound(sfxAtr.Path));
             }
         }
     }

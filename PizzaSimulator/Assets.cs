@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
 using PizzaSimulator.Content.Attributes;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,12 @@ namespace PizzaSimulator
 
         [Texture("Logo")]
         public static Texture2D Logo { get; set; }
+
+        [SoundEffect("Sounds/BKB")]
+        public static SoundEffect BKB { get; set; }
+
+        [Texture("BKB")]
+        public static Texture2D BKBLogo { get; set; }
 
         public static SpriteFont DefaultFont { get; set; }
     }
