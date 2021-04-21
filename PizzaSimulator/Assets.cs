@@ -35,6 +35,12 @@ namespace PizzaSimulator
         [Texture("Pixel")]
         public static Texture2D Pixel { get; set; }
 
+        [Texture("Pudge")]
+        public static Texture2D Pudge { get; set; }
+
+        [Texture("Logo")]
+        public static Texture2D Logo { get; set; }
+
         public static SpriteFont DefaultFont { get; set; }
     }
 }

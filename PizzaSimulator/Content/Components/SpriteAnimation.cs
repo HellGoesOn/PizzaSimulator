@@ -127,6 +127,8 @@ namespace PizzaSimulator.Content.Components
 
         public bool Active { get; set; } = true;
 
+        public float Scale { get; set; } = 1;
+
         public SpriteEffects SpriteFX { get; set; }
 
         public Texture2D SpriteSheet { get; set; }

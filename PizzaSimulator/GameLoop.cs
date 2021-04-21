@@ -18,47 +18,41 @@ namespace PizzaSimulator
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             Instance = this;
+
+            UIManager.Instance.Initialize();
         }
 
         protected override void Initialize()
         {
             base.Initialize();
 
+            ScreenManager.Instance.Load();
+
             ScreenManager.Instance.SetScreenSize(1280, 720);
-
-            UIManager.Instance.Initialize();
-
-
-            UIStats stats = new UIStats();
-
-            UIManager.Instance.AddElement(stats);
         }
 
         protected override void LoadContent()
         {
-            ScreenManager.Instance.Load();
-
             base.LoadContent();
 
             Loader.Load();
 
             Assets.DefaultFont = Content.Load<SpriteFont>("Fonts/DefaultFont");
 
-            World = new GameWorld();
-
             CameraManager.Camera.Position =
-                new Vector2(World.WidthInPixels / 2 - ScreenManager.Instance.ScreenWidth / 2 - Tile.WIDTH / 2,
-                World.HeightInPixels / 2 - ScreenManager.Instance.ScreenHeight / 2 - Tile.HEIGHT / 2);
+                new Vector2(GameWorld.WidthInPixels / 2 - ScreenManager.Instance.ScreenWidth / 2 - Tile.WIDTH / 2,
+                GameWorld.HeightInPixels / 2 - ScreenManager.Instance.ScreenHeight / 2 - Tile.HEIGHT / 2);
 
             Mouse.SetPosition(ScreenManager.Instance.ScreenWidth / 2, ScreenManager.Instance.ScreenHeight / 2);
-
-            MyPlayer = new Player();
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            if(GameStateManager.Instance.CurrentGameState == GameState.None)
+                GameStateManager.Instance.SwitchState(GameState.GameMenu);
 
             EntityManager.Instance.SetDeltaTime(gameTime);
 
@@ -69,7 +63,7 @@ namespace PizzaSimulator
                 e.Update();
             }
 
-            MyPlayer.Update();
+            MyPlayer?.Update();
 
             UIManager.Instance.UpdateInterfaces();
 
@@ -86,7 +80,7 @@ namespace PizzaSimulator
 
             // World render
             sb.Begin(samplerState: SamplerState.PointClamp, transformMatrix: CameraManager.Camera.Transform);
-            World.DrawWorld(sb);
+            World?.DrawWorld(sb);
             sb.End();
 
             // Entity draw
@@ -98,7 +92,7 @@ namespace PizzaSimulator
             sb.End();
 
             // UI Draw
-            sb.Begin();
+            sb.Begin(samplerState: SamplerState.PointClamp);
 
             UIManager.Instance.DrawInterfaces();
 
@@ -121,12 +115,11 @@ namespace PizzaSimulator
         public void CommitApocalypse()
         {
             World = new GameWorld();
-            //EntityManager.Instance.Entities.Clear();
         }
 
-        public static Player MyPlayer { get; private set; }
+        public static Player MyPlayer { get; internal set; }
 
-        public static GameWorld World { get; private set; }
+        public static GameWorld World { get; internal set; }
 
         public static GameLoop Instance { get; private set; }
     }

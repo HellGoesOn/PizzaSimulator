@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PizzaSimulator.Content.Components.Structs;
+using PizzaSimulator.Content.Enums;
 using PizzaSimulator.Content.World.Tiles;
 using System;
+using System.Collections.Generic;
 
 namespace PizzaSimulator.Content.World
 {
@@ -63,6 +65,13 @@ namespace PizzaSimulator.Content.World
             PathingGrid.CreateGrid(this);
         }
 
+        public void AddSubTile(SubTile subTile, SubTileOrientation orientation, int i, int j)
+        {
+            Tile tile = TileGrid[i, j];
+
+            tile.TryAddSubtile(subTile, orientation);
+        }
+
         public Rectangle GetTileBounds(int i, int j) => new Rectangle(i * Tile.WIDTH, j * Tile.HEIGHT, Tile.WIDTH, Tile.HEIGHT);
 
         public Tile GetTile(int i, int j) => TileGrid[i, j];
@@ -75,8 +84,10 @@ namespace PizzaSimulator.Content.World
 
         public PathGrid PathingGrid { get; set; }
 
-        public int WidthInPixels => WORLD_WIDTH * Tile.WIDTH;
+        public static int WidthInPixels => WORLD_WIDTH * Tile.WIDTH;
 
-        public int HeightInPixels => WORLD_HEIGHT * Tile.HEIGHT;
+        public static int HeightInPixels => WORLD_HEIGHT * Tile.HEIGHT;
+
+        public List<Tile> ImportantTiles { get; set; }
     }
 }

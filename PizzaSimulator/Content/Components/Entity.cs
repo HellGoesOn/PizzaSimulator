@@ -11,7 +11,7 @@ namespace PizzaSimulator.Content.Components
 {
     public abstract class Entity : IHasDraw
     {
-        public const int ENTITY_TYPES_COUNT = 2;
+        public const int ENTITY_TYPES_COUNT = 3;
 
         protected Entity(string defaultState)
         {
@@ -53,7 +53,7 @@ namespace PizzaSimulator.Content.Components
             Color           color         = Color.White;
             float           rotation      = animation.Rotation;
             Vector2         drawOrigin    = animation.DrawOrigin;
-            float           scale         = 1f;
+            float           scale         = animation.Scale;
             SpriteEffects   spriteEffects = animation.SpriteFX;
             float           depth         = Math.Clamp(MyCollider.Center.Y / 100000f, 0, 1);
 
@@ -61,10 +61,10 @@ namespace PizzaSimulator.Content.Components
             for (int i = 0; i < 4; i++)
             {
                 Vector2 offset = new Vector2(1, 0).RotatedBy(MathHelper.PiOver2 * i);
-                sb.Draw(texture, MyCollider.Center + offset, frame, Color.Black, rotation, drawOrigin, scale, spriteEffects, depth - (0.000001f * (i + 1)));
+                sb.Draw(texture, MyCollider.Center + offset + DrawOffset, frame, Color.Black, rotation, drawOrigin, scale, spriteEffects, depth - (0.000001f * (i + 1)));
             }
 
-            sb.Draw(texture, MyCollider.Center, frame, color, rotation, drawOrigin, scale, spriteEffects, depth);
+            sb.Draw(texture, MyCollider.Center + DrawOffset, frame, color, rotation, drawOrigin, scale, spriteEffects, depth);
         }
 
         public void SetState(string value)
@@ -90,6 +90,8 @@ namespace PizzaSimulator.Content.Components
         public bool Active { get; set; } = true;
 
         public Vector2 Velocity { get; set; }
+
+        public Vector2 DrawOffset { get; set; }
 
         public Vector2 Position { get; set; } = Vector2.Zero;
 

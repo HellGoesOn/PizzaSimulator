@@ -25,6 +25,15 @@ namespace PizzaSimulator.Content.UI.Elements
             RecalcAlignment();
         }
 
+        public void SetTextSilent(string text)
+        {
+            Text = text;
+
+            Vector2 size = Assets.DefaultFont.MeasureString(text);
+            SetWidth((int)size.X);
+            SetHeight((int)size.Y);
+        }
+
         public void SetColor(Color color)
         {
             TextColor = color;
@@ -33,7 +42,7 @@ namespace PizzaSimulator.Content.UI.Elements
 
         protected override void DrawSelf()
         {
-            DrawHelper.DrawBorderedString(Text, this.RealPosition, TextColor);
+            DrawHelper.DrawBorderedString(Text, this.RealPosition, TextColor, Scale);
         }
 
         public Color TextColor { get; private set; }

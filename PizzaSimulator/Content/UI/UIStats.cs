@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using PizzaSimulator.Content.Enums;
 using PizzaSimulator.Content.UI.Elements;
 using System;
 using System.Collections.Generic;
@@ -10,36 +11,32 @@ namespace PizzaSimulator.Content.UI
     {
         protected override void Initialize()
         {
-            SetWidth(ScreenManager.Instance.ScreenWidth);
-            SetWidth(ScreenManager.Instance.ScreenHeight);
+            Scale = 1f;
             ConsumesMouse = false;
 
             SetWidth(ScreenManager.Instance.ScreenWidth);
             SetHeight(ScreenManager.Instance.ScreenHeight);
 
-            BuildModeText = new UIText("");
-            BuildModeText.SetPosition(new Vector2(5, 20));
-
-            HighlightedTileText = new UIText("");
-            HighlightedTileText.SetPosition(new Vector2(5, 40));
-            HighlightedTileText.SetColor(Color.Yellow);
-
-            SelectedPlaceableTileText = new UIText("");
-            SelectedPlaceableTileText.SetPosition(new Vector2(5, 60));
-            SelectedPlaceableTileText.SetColor(Color.DarkGoldenrod);
-
-
             Panel = new UIElement();
-            Panel.SetWidth(400);
-            Panel.SetHeight(100);
-            Panel.HAlign = 0.5f;
+            Panel.SetWidth(300);
+            Panel.SetHeight(200);
+            Panel.HAlign = 0.1f;
             Panel.VAlign = 1f;
-            Panel.TakesPriority = true;
-
-            Panel.Append(BuildModeText);
-            Panel.Append(SelectedPlaceableTileText);
-            Panel.Append(HighlightedTileText);
             Panel.RecalcAlignmentForChildren();
+
+            EntitySelect = new UITextButton("", 100, 40);
+            EntitySelect.OnClick += delegate { GameLoop.MyPlayer.SelectedEtntityType++; };
+            EntitySelect.TakesPriority = true;
+            EntitySelect.SetPosition(new Vector2(10));
+
+            TileButton = new UITextButton("", 100, 40);
+            TileButton.OnClick += delegate { GameLoop.MyPlayer.SelectedTile++; };
+            TileButton.TakesPriority = true;
+            TileButton.SetPosition(new Vector2(10, 60));
+
+            Panel.Append(EntitySelect);
+            Panel.Append(TileButton);
+
 
             Append(Panel);
         }
@@ -48,23 +45,16 @@ namespace PizzaSimulator.Content.UI
         {
             Player plr = GameLoop.MyPlayer;
 
-            BuildModeText.SetText($"Build Mode: {GameLoop.MyPlayer.BuildMode}");
-            BuildModeText.SetColor(plr.BuildMode ? Color.LimeGreen : Color.Red);
+            EntitySelect.UpdateText($"{plr.SelectedEtntityType}");
 
-            string highlightedText = plr.HighlightedTile != null ? plr.HighlightedTile.ToString() : "No tile selected";
-            HighlightedTileText.SetText(highlightedText);
-
-            string selectedPlaceableText = plr.AvailableTiles[plr.SelectedTile].ToString();
-            SelectedPlaceableTileText.SetText(selectedPlaceableText);
+            TileButton.UpdateText($"{(TileType)plr.SelectedTile}");
         }
 
         public UIElement Panel { get; set; }
 
-        public UIText BuildModeText { get; set; }
+        public UITextButton TileButton { get; set; }
 
-        public UIText HighlightedTileText { get; set; }
-
-        public UIText SelectedPlaceableTileText { get; set; }
+        public UITextButton EntitySelect { get; set; }
 
         protected override void DrawSelf() { }
     }

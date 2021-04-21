@@ -35,6 +35,9 @@ namespace PizzaSimulator.Content.Entities
                 case EntityType.Worker:
                     Worker.SpawnWorker(position);
                     break;
+                case EntityType.Pudge:
+                    Pudge.SpawnPudge(position);
+                    break;
             }
         }
 

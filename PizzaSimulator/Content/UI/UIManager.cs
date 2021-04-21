@@ -53,21 +53,32 @@ namespace PizzaSimulator.Content.UI
             {
                 UIElement e = Elements[i];
 
-                if (e.Children.Count > 0)
-                {
-                    for(int j = e.Children.Count - 1; j >= 0; j--)
-                    {
-                        UIElement child = e.Children[j];
+                if(e.Children.Count > 0)
+                    return GetFinalElement(e);
 
-                        if (child.IsMouseHovering && child.TakesPriority)
-                            return child;
-                    }
-                }
-
-                if (e.IsMouseHovering)
+                if (e.IsMouseHovering && e.TakesPriority)
                     return e;
-
             }
+
+            return null;
+        }
+
+        public UIElement GetFinalElement(UIElement element)
+        {
+            if (element.Children.Count > 0)
+            {
+                foreach (UIElement child in element.Children)
+                {
+                    UIElement result = GetFinalElement(child);
+
+                    if (result != null && result.TakesPriority)
+                        return result;
+
+                }
+            }
+
+            if(element.IsMouseHovering)
+                return element;
 
             return null;
         }

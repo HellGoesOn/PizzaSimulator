@@ -4,10 +4,10 @@ using System.Text;
 
 namespace PizzaSimulator.Content.Enums
 {
-    public enum EntityType
+    public enum TileType
     {
-        Customer,
-        Worker,
-        Pudge
+        Grass,
+        Floor,
+        WoodenFloor
     }
 }
