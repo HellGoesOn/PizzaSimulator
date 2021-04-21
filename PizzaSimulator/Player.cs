@@ -7,6 +7,7 @@ using PizzaSimulator.Content.Enums;
 using PizzaSimulator.Content.UI;
 using PizzaSimulator.Content.World;
 using PizzaSimulator.Content.World.Tiles;
+using PizzaSimulator.Content.World.Tiles.SubTiles;
 using PizzaSimulator.Extensions;
 using PizzaSimulator.Helpers;
 using System;
@@ -34,11 +35,7 @@ namespace PizzaSimulator
             if (InputManager.HasRightClicked)
             {
                 BuildMode = false;
-                if (OnLeftClick != null)
-                {
-                    foreach (var d in OnLeftClick.GetInvocationList())
-                        OnLeftClick -= (d as EventHandler);
-                }
+                ClearLeftClickEvents();
             }
 
             if (InputManager.IsKeyPressed(Keys.R))
@@ -62,6 +59,15 @@ namespace PizzaSimulator
 
             if (InputManager.IsKeyHeld(Keys.S))
                 CameraManager.Camera.MoveBy(new Vector2(0, cameraSpeed));
+        }
+
+        public void ClearLeftClickEvents()
+        {
+            if (OnLeftClick != null)
+            {
+                foreach (var d in OnLeftClick.GetInvocationList())
+                    OnLeftClick -= (d as EventHandler);
+            }
         }
 
         public Tile Findtile(Vector2 mousePos)
@@ -118,10 +124,17 @@ namespace PizzaSimulator
 
             if (tile != null)
             {
+                Assets.BuildSound.Play();
+
                 TileCoordinates c = tile.Coordinates;
                 GameLoop.World.SetTile(AvailableTiles[SelectedTile], c.X, c.Y);
+
+                if (SelectedTile == (int)TileType.Floor)
+                    tile.TryAddSubtile(new CashRegister());
             }    
         }
+
+        public bool HasActions => OnLeftClick?.GetInvocationList().Length > 0;
 
         public void DoSpawn(object sender, EventArgs args)
         {

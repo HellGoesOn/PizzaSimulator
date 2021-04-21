@@ -30,6 +30,9 @@ namespace PizzaSimulator
         [Texture("WoodenFloorTile")]
         public static Texture2D WoodFloorTile { get; set; }
 
+        [Texture("CashRegister")]
+        public static Texture2D CashRegister { get; set; }
+
         [Texture("Walls")]
         public static Texture2D Walls { get; set; }
 
@@ -47,6 +50,12 @@ namespace PizzaSimulator
 
         [Texture("BKB")]
         public static Texture2D BKBLogo { get; set; }
+
+        [Texture("MainMenuBG")]
+        public static Texture2D MainMenuBG { get; set; }
+
+        [SoundEffect("Sounds/Build")]
+        public static SoundEffect BuildSound { get; set; }
 
         public static SpriteFont DefaultFont { get; set; }
     }

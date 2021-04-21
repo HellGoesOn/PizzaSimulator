@@ -21,43 +21,81 @@ namespace PizzaSimulator.Content.UI
             Panel = new UIElement();
             Panel.SetWidth(300);
             Panel.SetHeight(200);
-            Panel.HAlign = 0.005f;
-            Panel.VAlign = 0.95f;
+            Panel.HAlign = 0.015f;
+            Panel.VAlign = 0.985f;
             Panel.RecalcAlignmentForChildren();
 
-            EntitySelect = new UITextButton("", 100, 40);
-            EntitySelect.OnClick += EntitySelect_OnClick;
-            EntitySelect.TakesPriority = true;
-            EntitySelect.SetPosition(new Vector2(10));
+            EntityButton = new UITextButton("", 100, 40);
+            EntityButton.OnClick += EntitySelect_OnClick;
+            EntityButton.TakesPriority = true;
+            EntityButton.SetPosition(new Vector2(30, 10));
 
             TileButton = new UITextButton("", 100, 40);
             TileButton.OnClick += TileButton_OnClick;
             TileButton.TakesPriority = true;
             TileButton.SetPosition(new Vector2(30, 60));
 
-            UITextButton left = new UITextButton("<", 16, 40);
-            left.TakesPriority = true;
-            left.SetPosition(new Vector2(10, 60));
-            left.OnClick += delegate { GameLoop.MyPlayer.SelectedTile--; };
+            UITextButton leftEntity = new UITextButton("<", 16, 40)
+            {
+                TakesPriority = true
+            };
+            leftEntity.SetPosition(new Vector2(10));
+            leftEntity.OnClick += delegate { GameLoop.MyPlayer.SelectedEntityType--; };
 
-            right = new UITextButton(">", 16, 40);
-            right.TakesPriority = true;
-            right.SetPosition(new Vector2(10, 60));
-            right.OnClick += delegate { GameLoop.MyPlayer.SelectedTile++; };
+            UITextButton leftTile = new UITextButton("<", 16, 40)
+            {
+                TakesPriority = true
+            };
+            leftTile.SetPosition(new Vector2(10, 60));
+            leftTile.OnClick += delegate { GameLoop.MyPlayer.SelectedTile--; };
 
-            UITextButton quit = new UITextButton("Quit", 60, 40);
-            quit.VAlign = 0.95f;
-            quit.HAlign = 0.95f;
+            rightTile = new UITextButton(">", 16, 40)
+            {
+                TakesPriority = true
+            };
+            rightTile.SetPosition(new Vector2(10, 60));
+            rightTile.OnClick += delegate { GameLoop.MyPlayer.SelectedTile++; };
+
+            rightEntity = new UITextButton(">", 16, 40)
+            {
+                TakesPriority = true
+            };
+            rightEntity.SetPosition(new Vector2(10, 10));
+            rightEntity.OnClick += delegate { GameLoop.MyPlayer.SelectedEntityType++; };
+
+
+            UITextButton quit = new UITextButton("Quit", 60, 40)
+            {
+                VAlign = 0.015f,
+                HAlign = 0.015f
+            };
             quit.OnClick += delegate { GameStateManager.Instance.SwitchState(GameState.GameMenu); };
             quit.TakesPriority = true;
 
+            UIElement panel = new UIElement();
+            panel.SetWidth(200);
+            panel.SetHeight(100);
+            panel.VAlign = 0.985f;
+            panel.HAlign = 0.985f;
 
-            Panel.Append(EntitySelect);
+            actionText = new UIText("No Action Avaiable")
+            {
+                HAlign = 0.5f,
+                VAlign = 0.5f
+            };
+            panel.Append(actionText);
+
+
+            Panel.Append(EntityButton);
             Panel.Append(TileButton);
-            Panel.Append(left);
-            Panel.Append(right);
+            Panel.Append(leftTile);
+            Panel.Append(rightTile);
+            Panel.Append(rightEntity);
+            Panel.Append(leftEntity);
 
-            Panel.Append(quit);
+            Append(panel);
+
+            Append(quit);
 
 
             Append(Panel);
@@ -68,7 +106,8 @@ namespace PizzaSimulator.Content.UI
         {
             Player plr = GameLoop.MyPlayer;
 
-            plr.OnLeftClick -= plr.DoSpawn;
+            plr.ClearLeftClickEvents();
+            actionText.SetText("Spawn Selected Entity");
 
             plr.OnLeftClick += plr.DoSpawn;
         }
@@ -76,8 +115,10 @@ namespace PizzaSimulator.Content.UI
         private void TileButton_OnClick(object sender, EventArgs e)
         {
             Player plr = GameLoop.MyPlayer;
-            plr.OnLeftClick -= plr.DoBuild;
+            plr.ClearLeftClickEvents();
             plr.BuildMode = true;
+
+            actionText.SetText("Place Selected Tile");
 
             plr.OnLeftClick += plr.DoBuild;
         }
@@ -86,20 +127,29 @@ namespace PizzaSimulator.Content.UI
         {
             Player plr = GameLoop.MyPlayer;
 
-            EntitySelect.UpdateText($"{plr.SelectedEntityType}");
+            EntityButton.UpdateText($"{plr.SelectedEntityType}");
 
             TileButton.UpdateText($"{(TileType)plr.SelectedTile}");
 
-            right.SetPosition(new Vector2(34 + TileButton.ScaledWidth, 60));
+            rightTile.SetPosition(new Vector2(34 + TileButton.ScaledWidth, 60));
+
+            rightEntity.SetPosition(new Vector2(34 + EntityButton.ScaledWidth, 10));
+
+            if (!plr.HasActions)
+                actionText.SetText("No Action");
         }
 
-        private UITextButton right;
+        private UITextButton rightEntity;
+
+        private UITextButton rightTile;
+
+        private UIText actionText;
 
         public UIElement Panel { get; set; }
 
         public UITextButton TileButton { get; set; }
 
-        public UITextButton EntitySelect { get; set; }
+        public UITextButton EntityButton { get; set; }
 
         protected override void DrawSelf() { }
     }

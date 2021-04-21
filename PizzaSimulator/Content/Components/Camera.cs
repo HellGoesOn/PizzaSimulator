@@ -8,7 +8,7 @@ namespace PizzaSimulator.Content.Components
     {
         public Camera()
         {
-            Zoom = 1f;
+            Zoom = 3f;
         }
 
 

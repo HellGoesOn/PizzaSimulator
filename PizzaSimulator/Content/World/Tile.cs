@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using PizzaSimulator.Content.Components.Structs;
 using PizzaSimulator.Content.Enums;
+using PizzaSimulator.Extensions;
 
 namespace PizzaSimulator.Content.World
 {
@@ -28,7 +29,7 @@ namespace PizzaSimulator.Content.World
                     SubTile subTile = SubTiles[i, j];
 
                     if (subTile != null)
-                        subTile.Draw(spriteBatch, position + new Vector2(i * SubTile.WIDTH, j * SubTile.HEIGHT));
+                        subTile.Draw(spriteBatch, position);
                 }
             }
         }
@@ -38,25 +39,21 @@ namespace PizzaSimulator.Content.World
             return $"Tile: {GetType().Name} at " + Coordinates;
         }
 
-        public void TryAddSubtile(SubTile tile, SubTileOrientation orientnation)
+        public void TryAddSubtile(SubTile tile)
         {
-            switch(orientnation)
+            for(int i = 0; i < 2; i++)
             {
-                case SubTileOrientation.TopLeft:
-                    SubTiles[0, 0] = tile;
-                    break;
-                case SubTileOrientation.TopRight:
-                    SubTiles[1, 0] = tile;
-                    break;
-                case SubTileOrientation.BottomLeft:
-                    SubTiles[0, 1] = tile;
-                    break;
-                case SubTileOrientation.BottomRight:
-                    SubTiles[1, 1] = tile;
-                    break;
+                for (int j = 0; j < 2; j++)
+                {
+                    if (GetSubTileBounds(this.Coordinates.X * WIDTH, this.Coordinates.Y * HEIGHT).Contains(InputManager.MouseScreenPosition))
+                        SubTiles[i, j] = tile;
+                }
             }
         }
-        
+
+
+        public Rectangle GetSubTileBounds(int i, int j) => new Rectangle(i, j, SubTile.WIDTH, SubTile.HEIGHT);
+
         public TileCoordinates Coordinates { get; set; }
 
         public Texture2D Texture { get; }

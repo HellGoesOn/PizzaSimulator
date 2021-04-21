@@ -24,6 +24,8 @@ namespace PizzaSimulator.Content.World
 
             PathingGrid = new PathGrid(this);
 
+            ImportantTiles = new List<Tile>();
+
             UpdateWorldRender();
         }
 
@@ -65,13 +67,14 @@ namespace PizzaSimulator.Content.World
             PathingGrid.CreateGrid(this);
         }
 
-        public void AddSubTile(SubTile subTile, SubTileOrientation orientation, int i, int j)
+        public void AddSubTile(SubTile subTile, int i, int j)
         {
             Tile tile = TileGrid[i, j];
 
-            tile.TryAddSubtile(subTile, orientation);
+            tile.TryAddSubtile(subTile);
 
             ImportantTiles.Add(tile);
+            UpdateWorldRender();
         }
 
         public Rectangle GetTileBounds(int i, int j) => new Rectangle(i * Tile.WIDTH, j * Tile.HEIGHT, Tile.WIDTH, Tile.HEIGHT);

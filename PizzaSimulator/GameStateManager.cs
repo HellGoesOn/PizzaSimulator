@@ -1,4 +1,5 @@
 ﻿using PizzaSimulator.Content.Components;
+using PizzaSimulator.Content.Entities;
 using PizzaSimulator.Content.UI;
 using PizzaSimulator.Content.World;
 using System;
@@ -15,6 +16,7 @@ namespace PizzaSimulator
 
             GameLoop.MyPlayer = new Player();
             GameLoop.World = new GameWorld();
+            EntityManager.Instance.Entities.Clear();
 
             UIManager.Instance.AddElement(new UIStats());
         }
@@ -22,6 +24,7 @@ namespace PizzaSimulator
         protected void GoToMenu()
         {
             UIManager.Instance.Elements.Clear();
+            EntityManager.Instance.Entities.Clear();
             GameLoop.MyPlayer = null;
             GameLoop.World = null;
             UIManager.Instance.AddElement(new UIMainMenu());
