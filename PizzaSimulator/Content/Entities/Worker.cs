@@ -58,9 +58,19 @@ namespace PizzaSimulator.Content.Entities
         {
             Tile tile = null;
 
+            TileCoordinates c = Position.ToTileCoordinates();
+            Tile currentTile = GameLoop.World.TileGrid[c.X, c.Y];
+
+            if (currentTile.HasSubtile(typeof(CashRegister)))
+            {
+                SetState("Idle");
+                CurrentState.CurrentAnimation.SpriteFX = RNGMachine.Instance.Generator.Next(2) == 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.FlipHorizontally;
+                return;
+            }
+
             foreach (Tile t in GameLoop.World.ImportantTiles)
             {
-                if (GameLoop.World.ContainingEntities(t).Count(x => x.GetType() == typeof(Worker)) <= 1 && t.HasSubtile(typeof(CashRegister)))
+                if (GameLoop.World.ContainingEntities(t).Count(x => x.GetType() == typeof(Worker)) < 1 && t.HasSubtile(typeof(CashRegister)))
                 {
                     tile = t;
                     break;
@@ -93,10 +103,12 @@ namespace PizzaSimulator.Content.Entities
 
             Vector2 destination = Node.ToWorldPos(currentNode);
 
-            Velocity = Vector2.Normalize(destination - (Position + new Vector2(5))) * 22f;
+            Velocity = Vector2.Normalize(destination - (Position + new Vector2(5, 9))) * 32f;
 
-            if (Vector2.Distance(Position + new Vector2(5), destination) <= 4f)
+            if (Vector2.Distance(Position + new Vector2(5, 9), destination) <= 2f)
                 path.RemoveAt(0);
+
+            CurrentState.CurrentAnimation.SpriteFX = Velocity.X < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
             Position += Velocity * deltaTime;
         }
@@ -117,7 +129,20 @@ namespace PizzaSimulator.Content.Entities
         protected override void UpdateSelf()
         {
             CurrentState.Update();
+
+            if (!EntityManager.Instance.Entities.Contains(Helping))
+                Helping = null;
         }
+
+        public bool CanHelp() => Helping == null;
+
+        public void RequestHelp(Entity e)
+        {
+            if (CanHelp())
+                Helping = e;
+        }
+
+        public Entity Helping { get; set; }
 
         private List<Node> path;
     }

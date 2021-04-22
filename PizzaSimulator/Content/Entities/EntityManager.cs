@@ -23,6 +23,11 @@ namespace PizzaSimulator.Content.Entities
                 if (e.MyCollider.Hitbox.Contains(InputManager.MouseScreenPosition))
                     e.Highlighted = true;
             }
+
+            foreach (Entity e in EntitiesToRemove)
+                Entities.Remove(e);
+
+            EntitiesToRemove.Clear();
         }
 
         public static void CreateEntity(EntityType entity, Vector2 position)
@@ -49,11 +54,12 @@ namespace PizzaSimulator.Content.Entities
                 if (entity == e)
                     entityRef = entity;
 
-            Instance.Entities.Remove(entityRef);
+            Instance.EntitiesToRemove.Add(entityRef);
         }
 
         public float DeltaTime { get; private set; }
 
         public List<Entity> Entities { get; } = new List<Entity>();
+        public HashSet<Entity> EntitiesToRemove { get; } = new HashSet<Entity>();
     }
 }

@@ -50,7 +50,7 @@ namespace PizzaSimulator.Content.Components
             SpriteAnimation animation     = CurrentState.CurrentAnimation;
             Texture2D       texture       = animation.SpriteSheet;
             Rectangle       frame         = animation.FrameRect;
-            Color           color         = Color.White;
+            Color           color         = Color.White * animation.Opacity;
             float           rotation      = animation.Rotation;
             Vector2         drawOrigin    = animation.DrawOrigin;
             float           scale         = animation.Scale;

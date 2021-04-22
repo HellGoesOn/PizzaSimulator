@@ -49,18 +49,74 @@ namespace PizzaSimulator.Content.Entities
             tracingPath.OnStateUpdate += delegate { TracePath(); };
             tracingPath.OnStateEnd += delegate { Velocity = Vector2.Zero; SetState("Idle"); };
 
+            EntityState goingNowhere = new EntityState(new SpriteAnimation(Assets.Customer_Walk, 4, 8, true));
+            goingNowhere.OnStateBegin += GoingNowhere_OnStateBegin;
+            goingNowhere.OnStateUpdate += GoingNowhere_OnStateUpdate;
+            goingNowhere.OnStateUpdate += delegate { TracePath(); };
+
             States.Add("Idle", idle);
             States.Add("Wander", wander);
             States.Add("TracingPath", tracingPath);
+            States.Add("GoingNowhere", goingNowhere);
+        }
+
+        private void GoingNowhere_OnStateUpdate(object sender)
+        {
+            CurrentState.CurrentAnimation.Opacity -= 0.001f;
+
+            if (CurrentState.CurrentAnimation.Opacity <= 0.75f)
+            {
+                if (helper != null)
+                {
+                    helper.Helping = null;
+                    helper = null;
+                }
+            }
+
+            if (CurrentState.CurrentAnimation.Opacity <= 0.12f)
+                EntityManager.KillEntity(this);
+        }
+
+        private void GoingNowhere_OnStateBegin(object sender)
+        {
+            path.Clear();
+
+            path = Pathfinding.FindPath(GameLoop.World.PathingGrid, Position, Tile.GetCenter(GameLoop.World.GetTile(0, 0)));
         }
 
         private void PickState()
         {
             Tile tile = null;
 
+            TileCoordinates c = Position.ToTileCoordinates();
+            Tile currentTile = GameLoop.World.TileGrid[c.X, c.Y];
+
+            if (GameLoop.World.ContainingEntities(currentTile).Count(x => x.GetType() == typeof(Worker)) > 0 && currentTile.HasSubtile(typeof(CashRegister)))
+            {
+                if(needsHelp)
+                {
+                    helper = (Worker)GameLoop.World.ContainingEntities(currentTile).Find(x => x.GetType() == typeof(Worker));
+                    helper.RequestHelp(this);
+
+                    if (helper.Helping == this)
+                    {
+                        needsHelp = false;
+                        SetState("Idle");
+                    }
+                    else
+                    {
+                        SetState("Wander");
+                    }
+                    return;
+                }
+
+                SetState("GoingNowhere");
+                return;
+            }
+
             foreach (Tile t in GameLoop.World.ImportantTiles)
             {
-                if (GameLoop.World.ContainingEntities(t).Count(x => x.GetType() == typeof(Worker)) > 0 && t.HasSubtile(typeof(CashRegister)))
+                if (GameLoop.World.ContainingEntities(t).Count(x => x.GetType() == typeof(Worker) && (x as Worker).CanHelp()) > 0 && t.HasSubtile(typeof(CashRegister)))
                 {
                     tile = t;
                     break;
@@ -98,6 +154,8 @@ namespace PizzaSimulator.Content.Entities
             if (Vector2.Distance(Position + new Vector2(5), destination) <= 4f)
                 path.RemoveAt(0);
 
+            CurrentState.CurrentAnimation.SpriteFX = Velocity.X < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
             Position += Velocity * deltaTime;
         }
 
@@ -118,6 +176,10 @@ namespace PizzaSimulator.Content.Entities
         {
             CurrentState.Update();
         }
+
+        private bool needsHelp = true;
+
+        private Worker helper = null;
 
         private List<Node> path;
     }
