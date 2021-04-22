@@ -40,6 +40,8 @@ namespace PizzaSimulator.Content.Entities
             path = new List<Node>();
             EntityState idle = new EntityState(new SpriteAnimation(Assets.Customer, 1, 5, true, 160));
             idle.OnStateEnd += delegate { PickState(); };
+            EntityState shortIdle = new EntityState(new SpriteAnimation(Assets.Customer, 1, 5, true, 20));
+            shortIdle.OnStateEnd += delegate { PickState(); };
             EntityState wander = new EntityState(new SpriteAnimation(Assets.Customer_Walk, 4, 8, true, 160));
             wander.OnStateBegin += delegate { Velocity = new Vector2(RNGMachine.Instance.Generator.Next(-16, 17), RNGMachine.Instance.Generator.Next(-16, 17)); };
             wander.OnStateUpdate += Wander_OnUpdate;
@@ -55,6 +57,7 @@ namespace PizzaSimulator.Content.Entities
             goingNowhere.OnStateUpdate += delegate { TracePath(); };
 
             States.Add("Idle", idle);
+            States.Add("ShortIdle", shortIdle);
             States.Add("Wander", wander);
             States.Add("TracingPath", tracingPath);
             States.Add("GoingNowhere", goingNowhere);
@@ -91,7 +94,7 @@ namespace PizzaSimulator.Content.Entities
             TileCoordinates c = Position.ToTileCoordinates();
             Tile currentTile = GameLoop.World.TileGrid[c.X, c.Y];
 
-            if (GameLoop.World.ContainingEntities(currentTile).Count(x => x.GetType() == typeof(Worker)) > 0 && currentTile.HasSubtile(typeof(CashRegister)))
+            if (GameLoop.World.ContainingEntities(currentTile).Count(x => x.GetType() == typeof(Worker) && ((x as Worker).Helping == null || (x as Worker).Helping == this)) > 0 && currentTile.HasSubtile(typeof(CashRegister)))
             {
                 if(needsHelp)
                 {
@@ -105,7 +108,7 @@ namespace PizzaSimulator.Content.Entities
                     }
                     else
                     {
-                        SetState("Wander");
+                        SetState("ShortIdle");
                     }
                     return;
                 }
@@ -139,7 +142,7 @@ namespace PizzaSimulator.Content.Entities
         {
             if (path.Count <= 0)
             {
-                SetState("Idle");
+                SetState("ShortIdle");
                 return;
             }
 

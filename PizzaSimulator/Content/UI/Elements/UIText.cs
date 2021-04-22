@@ -1,8 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using PizzaSimulator.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PizzaSimulator.Content.UI.Elements
 {
@@ -42,7 +39,7 @@ namespace PizzaSimulator.Content.UI.Elements
 
         protected override void DrawSelf()
         {
-            DrawHelper.DrawBorderedString(Text, this.RealPosition, TextColor, Scale);
+            DrawHelper.DrawBorderedString(Text, new Vector2((int)this.RealPosition.X, (int)this.RealPosition.Y), TextColor, Scale);
         }
 
         public Color TextColor { get; private set; }
